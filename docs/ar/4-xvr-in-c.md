@@ -22,6 +22,8 @@ C الصغيرة الخاصة بـ itelx. والأمر `make` لا يعمل في
 
 ## المكوّنات
 
+<div dir="rtl">
+
 | الملف | ما هو |
 |---|---|
 | `sdk/system/lib/include/itx.h` | كل ما يستطيع البرنامج استدعاءه (بالأسفل) |
@@ -31,6 +33,8 @@ C الصغيرة الخاصة بـ itelx. والأمر `make` لا يعمل في
 | `sdk/tools/xvrlink.c` | يحوّل ملف ELF المربوط إلى ملف XVR |
 | `sdk/xvr/xvr_format.h` | صيغة XVR |
 | `apps/lib/ui.h` | إطارات الشاشة الكاملة والمفاتيح الخام ومولّد أعداد عشوائية (من هذا المستودع) |
+
+</div>
 
 ## مرحباً، بلغة C
 
@@ -70,6 +74,8 @@ gcc -O2 -o xvrlink sdk/tools/xvrlink.c
 كل شيء موجود في [`itx.h`](../../sdk/system/lib/include/itx.h). الدوال تعيد
 رقم خطأ سالباً عند الفشل (لا يوجد `errno`)، و`strerror(r)` تعطي نصه.
 
+<div dir="rtl">
+
 - **الإخراج**: `printf` و`dprintf` و`snprintf` و`puts` و`putchar` و`flush`
   (الإخراج مخزَّن مؤقتاً: نفّذ `flush()` قبل أن تنتظر إدخالاً بنفسك)
 - **الذاكرة**: `malloc` و`calloc` و`realloc` و`free`
@@ -83,6 +89,8 @@ gcc -O2 -o xvrlink sdk/tools/xvrlink.c
   و`devlist` (أجهزة USB) و`eject` و`xvr_check` و`reboot` و`poweroff`
 - **الطرفية**: `tty_mode(TTY_MODE_RAW)` لقراءة المفاتيح واحداً واحداً،
   و`tty_key`، و`tty_info` (عدد الأعمدة والصفوف ولغة لوحة المفاتيح)
+
+</div>
 
 لا توجد أرقام عشرية (floating point) في `printf`، ولا مكتبة C قياسية غير
 هذه: احفظ الأرقام كأعداد صحيحة (الأحجام بالكيلوبايت، والمال بالقروش).
@@ -131,6 +139,8 @@ int main(void) {
 
 ## التطبيقات كأمثلة
 
+<div dir="rtl">
+
 | التطبيق | ماذا تتعلم منه |
 |---|---|
 | [`sum`](../../apps/xvr/sum/sum.c) | قراءة الملفات على أجزاء، و SHA-256 و CRC-32؛ أداة سطر أوامر بسيطة |
@@ -141,3 +151,5 @@ int main(void) {
 | [`life`](../../apps/xvr/life/life.c) | حجم الشاشة من `tty_info`، والحركة |
 | [`edit`](../../apps/xvr/edit/edit.c) | تحرير الأسطر بالطرفية (الوضع العادي)، ونص في الذاكرة |
 | [`fm`](../../apps/xvr/fm/fm.c) | المجلدات، والنسخ بين الأقراص، وتشغيل برامج أخرى بـ `spawn` |
+
+</div>

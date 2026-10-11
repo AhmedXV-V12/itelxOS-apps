@@ -5,7 +5,7 @@ apps written in the **XVC** language and complex apps built as **XVR**
 executables, a converter from XVC to XVR, the SDK to write your own, and a
 guide in Arabic and English.
 
-<p align="center"><img src="docs/img/welcome.png" alt="The welcome app on itelxOS 1.3" width="760"></p>
+<p align="center"><img src="screenshots/welcome.png" alt="The welcome app on itelxOS 1.3" width="760"></p>
 
 ## بالعربي
 
@@ -27,7 +27,7 @@ guide in Arabic and English.
 3. Plug the stick into itelx and answer `yes` to `are you need update ?`.
 4. Type `welcome`.
 
-<p align="center"><img src="docs/img/usb-install.png" alt="Installing from a USB stick" width="760"></p>
+<p align="center"><img src="screenshots/usb-install.png" alt="Installing from a USB stick" width="760"></p>
 
 Details, also for Windows, Linux and macOS: [docs/en/5-usb-fat32.md](docs/en/5-usb-fat32.md).
 
@@ -72,9 +72,9 @@ Details, also for Windows, Linux and macOS: [docs/en/5-usb-fat32.md](docs/en/5-u
 | `xvc2xvr` | makes an XVR executable from an XVC program, on itelx itself |
 
 <p align="center">
-<img src="docs/img/fm.png" alt="fm" width="380"> <img src="docs/img/2048.png" alt="2048" width="380"><br>
-<img src="docs/img/sokoban.png" alt="sokoban" width="380"> <img src="docs/img/sysmon.png" alt="sysmon" width="380"><br>
-<img src="docs/img/calc.png" alt="calc" width="380"> <img src="docs/img/life.png" alt="life" width="380">
+<img src="screenshots/fm.png" alt="fm" width="380"> <img src="screenshots/2048.png" alt="2048" width="380"><br>
+<img src="screenshots/sokoban.png" alt="sokoban" width="380"> <img src="screenshots/sysmon.png" alt="sysmon" width="380"><br>
+<img src="screenshots/calc.png" alt="calc" width="380"> <img src="screenshots/life.png" alt="life" width="380">
 </p>
 
 ## Learn
@@ -99,7 +99,7 @@ The XVR made from an XVC program is the XVC interpreter with the program
 inside it: one file that installs and runs by its name, checked by the
 kernel before it runs ([chapter 3](docs/en/3-xvc-to-xvr.md)).
 
-<p align="center"><img src="docs/img/xvc2xvr.png" alt="xvc2xvr and sum -c on itelx" width="760"></p>
+<p align="center"><img src="screenshots/xvc2xvr.png" alt="xvc2xvr and sum -c on itelx" width="760"></p>
 
 ## Building
 
@@ -127,7 +127,8 @@ sdk/             libitx, the system call interface, the XVR format, xvrlink, the
                  interpreter, and xvcapp (the runtime of XVRs made from XVC)
 tools/           xvc2xvr.py, xvrinfo.py, host-xvc (XVC on a PC)
 usb/             ready for a FAT32 stick
-docs/ar, docs/en the guide
+docs/ar, docs/en the guide (Arabic, English)
+screenshots/     the apps on itelxOS 1.3
 tests/           tests of the tools, and the test on a real itelx
 ```
 

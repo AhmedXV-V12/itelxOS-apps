@@ -1,0 +1,89 @@
+# timer.xvc - a countdown timer and a stopwatch
+#   timer 90          counts down 90 seconds
+#   timer 5m          5 minutes (also: 1h, 1:30, 1h20m, 45s)
+#   timer             a stopwatch: Enter takes a lap time, q and Enter stops
+# Ctrl+C stops the countdown.
+
+fn two(n) {
+    if n < 10 { return "0" + str(n) }
+    return str(n)
+}
+
+fn clock(secs) {
+    let h = secs / 3600
+    let m = secs % 3600 / 60
+    let s = secs % 60
+    if h > 0 { return str(h) + ":" + two(m) + ":" + two(s) }
+    return two(m) + ":" + two(s)
+}
+
+fn hundredths(ms) {
+    return clock(ms / 1000) + "." + two(ms % 1000 / 10)
+}
+
+# "90", "1:30", "5m", "1h20m", "45s" -> seconds, or nil
+fn seconds(text) {
+    if has(text, ":") {
+        let total = 0
+        for part in split(text, ":") {
+            let n = int(part)
+            if n == nil or n < 0 { return nil }
+            total = total * 60 + n
+        }
+        return total
+    }
+    let total = 0
+    let num = ""
+    for c in text {
+        if c >= "0" and c <= "9" {
+            num = num + c
+        } else {
+            if num == "" { return nil }
+            let n = int(num)
+            if c == "h" { total += n * 3600 }
+            elif c == "m" { total += n * 60 }
+            elif c == "s" { total += n }
+            else { return nil }
+            num = ""
+        }
+    }
+    if num != "" { total += int(num) }
+    return total
+}
+
+if len(args) > 1 {
+    let total = seconds(args[1])
+    if total == nil or total <= 0 {
+        print("use: timer <time>, for example: timer 90, timer 5m, timer 1:30")
+        exit(1)
+    }
+    let start = uptime()
+    let end = start + total * 1000
+    print("timer: " + clock(total))
+    while true {
+        let left = (end - uptime() + 999) / 1000
+        if left <= 0 { break }
+        write("\r  " + color("cyan") + clock(left) + color("reset") + " left \e[K")
+        let next = end - (left - 1) * 1000
+        let ms = next - uptime()
+        if ms > 0 { sleep(ms) }
+    }
+    print("\r  " + color("yellow") + "00:00  time is up!" + color("reset") + "\e[K")
+    exit(0)
+}
+
+print("stopwatch: Enter takes a lap time, q and Enter stops")
+let start = uptime()
+let last = start
+let lap = 0
+while true {
+    let line = input("")
+    let now = uptime()
+    if line == nil or trim(line) == "q" {
+        print("total " + hundredths(now - start))
+        break
+    }
+    lap += 1
+    print("lap " + str(lap) + ": " + hundredths(now - last) + "   total " + hundredths(now - start))
+    last = now
+}

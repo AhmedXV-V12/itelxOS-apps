@@ -1,0 +1,113 @@
+# contacts.xvc - a phone book, kept in /dex/data/contacts.txt
+#   contacts               all contacts, by name
+#   contacts add           asks for the name, the phone number and a note
+#   contacts find <text>   the contacts whose name, number or note has the text
+#   contacts del <name>    removes a contact
+# Names may be Arabic or English.
+
+let DATA = "/dex/data"
+if not exists("/dex") { DATA = "data" }
+let FILE = DATA + "/contacts.txt"
+
+fn load() {
+    let all = []
+    let text = readfile(FILE)
+    if text == nil { return all }
+    for line in split(text, "\n") {
+        let f = split(line, "|")
+        if len(f) >= 2 {
+            let note = ""
+            if len(f) > 2 { note = f[2] }
+            push(all, [f[0], f[1], note])
+        }
+    }
+    return all
+}
+
+fn save(all) {
+    if not exists(DATA) { makedir(DATA) }
+    let lines = []
+    for c in all { push(lines, c[0] + "|" + c[1] + "|" + c[2]) }
+    let text = join(lines, "\n")
+    if len(lines) > 0 { text = text + "\n" }
+    return writefile(FILE, text)
+}
+
+# sorted by name (lower case), as a new list
+fn by_name(all) {
+    let names = []
+    let index = {}
+    for c in all {
+        let k = lower(c[0]) + "|" + c[1]
+        push(names, k)
+        index[k] = c
+    }
+    sort(names)
+    let out = []
+    for k in names { push(out, index[k]) }
+    return out
+}
+
+fn pad(s, n) {
+    while len(s) < n { s = s + " " }
+    return s
+}
+
+fn show(c) {
+    let line = "  " + pad(c[0], 22) + " " + color("cyan") + pad(c[1], 16) + color("reset")
+    if c[2] != "" { line = line + " " + color("dim") + c[2] + color("reset") }
+    print(line)
+}
+
+fn ask(prompt) {
+    let s = input(prompt)
+    if s == nil { return "" }
+    return trim(replace(s, "|", "/"))
+}
+
+let all = load()
+let cmd = "list"
+if len(args) > 1 { cmd = args[1] }
+let rest = []
+for i in range(2, len(args)) { push(rest, args[i]) }
+let text = lower(join(rest, " "))
+
+if cmd == "list" {
+    if len(all) == 0 { print("no contacts yet - add one: contacts add") }
+    for c in by_name(all) { show(c) }
+    if len(all) > 0 { print(str(len(all)) + " contact(s)") }
+} elif cmd == "add" {
+    let name = ask("name:  ")
+    let phone = ask("phone: ")
+    let note = ask("note (Enter for none): ")
+    if name == "" or phone == "" {
+        print("a contact needs a name and a phone number - nothing saved")
+    } else {
+        push(all, [name, phone, note])
+        if save(all) { print("saved " + name) }
+        else { print(color("red") + "cannot write " + FILE + color("reset")) }
+    }
+} elif cmd == "find" {
+    let found = 0
+    for c in by_name(all) {
+        if has(lower(c[0]), text) or has(c[1], text) or has(lower(c[2]), text) {
+            show(c)
+            found += 1
+        }
+    }
+    print(str(found) + " found")
+} elif cmd == "del" {
+    let keep = []
+    let gone = 0
+    for c in all {
+        if lower(c[0]) == text { gone += 1 } else { push(keep, c) }
+    }
+    if gone == 0 {
+        print("no contact named \"" + join(rest, " ") + "\" (the whole name, as in the list)")
+    } else {
+        save(keep)
+        print("removed " + str(gone) + " contact(s)")
+    }
+} else {
+    print("use: contacts [add | find <text> | del <name>]")
+}

@@ -1,0 +1,97 @@
+# cipher.xvc - classic secret writing: Caesar, ROT13 and Vigenere
+#   cipher caesar <shift> <text>       shift each letter (English and Arabic)
+#   cipher uncaesar <shift> <text>     shift back
+#   cipher crack <text>                every Caesar shift, to find the readable one
+#   cipher rot13 <text>                ROT13 (the same both ways)
+#   cipher vigenere <key> <text>       Vigenere with a key word
+#   cipher unvigenere <key> <text>
+# These ciphers are for learning: they do not protect real secrets.
+
+let LOWER = "abcdefghijklmnopqrstuvwxyz"
+let UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+let ARABIC = "ابتثجحخدذرزسشصضطظعغفقكلمنهوي"
+
+# the letter c moved by k places in its alphabet; other characters stay
+fn shift(c, k) {
+    for abc in [LOWER, UPPER, ARABIC] {
+        let i = find(abc, c)
+        if i >= 0 {
+            let n = len(abc)
+            return abc[((i + k) % n + n) % n]
+        }
+    }
+    return c
+}
+
+fn caesar(text, k) {
+    let out = []
+    for c in text { push(out, shift(c, k)) }
+    return join(out, "")
+}
+
+# the key's letters as shifts: a/A = 0 ... z/Z = 25, Arabic letters by their place
+fn key_shifts(key) {
+    let out = []
+    for c in key {
+        for abc in [LOWER, UPPER, ARABIC] {
+            let i = find(abc, c)
+            if i >= 0 { push(out, i) }
+        }
+    }
+    return out
+}
+
+fn vigenere(text, key, sign) {
+    let ks = key_shifts(key)
+    if len(ks) == 0 { return nil }
+    let out = []
+    let j = 0
+    for c in text {
+        let s = shift(c, sign * ks[j % len(ks)])
+        if s != c or has(LOWER, c) or has(UPPER, c) or has(ARABIC, c) { j += 1 }
+        push(out, s)
+    }
+    return join(out, "")
+}
+
+fn rest_from(i) {
+    let w = []
+    for k in range(i, len(args)) { push(w, args[k]) }
+    return join(w, " ")
+}
+
+fn usage() {
+    print("use: cipher caesar|uncaesar <shift> <text>")
+    print("     cipher vigenere|unvigenere <key> <text>")
+    print("     cipher rot13 <text>      cipher crack <text>")
+}
+
+if len(args) < 3 {
+    usage()
+    exit(1)
+}
+let cmd = args[1]
+if cmd == "rot13" {
+    print(caesar(rest_from(2), 13))
+} elif cmd == "crack" {
+    let text = rest_from(2)
+    for k in range(1, 26) {
+        let n = str(k)
+        if k < 10 { n = " " + n }
+        print(n + ": " + caesar(text, -k))
+    }
+} elif (cmd == "caesar" or cmd == "uncaesar") and len(args) > 3 {
+    let k = int(args[2])
+    if k == nil { print("the shift is a number, e.g. 3"); exit(1) }
+    if cmd == "uncaesar" { k = -k }
+    print(caesar(rest_from(3), k))
+} elif (cmd == "vigenere" or cmd == "unvigenere") and len(args) > 3 {
+    let sign = 1
+    if cmd == "unvigenere" { sign = -1 }
+    let r = vigenere(rest_from(3), args[2], sign)
+    if r == nil { print("the key must have letters"); exit(1) }
+    print(r)
+} else {
+    usage()
+    exit(1)
+}

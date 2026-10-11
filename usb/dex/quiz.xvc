@@ -1,0 +1,80 @@
+# quiz.xvc - multiple-choice questions about computers, science and the world
+#   quiz          10 questions in a random order
+#   quiz <n>      n questions (up to all of them)
+# Press a, b, c or d; Esc stops.
+
+let Q = [
+    ["What does CPU stand for?", ["Central Processing Unit", "Computer Power Unit", "Central Program Utility", "Core Processing Usage"], 0],
+    ["How many bits are in one byte?", ["4", "8", "16", "32"], 1],
+    ["Which number is 1010 in binary?", ["5", "8", "10", "12"], 2],
+    ["What is 0xFF in decimal?", ["15", "100", "255", "256"], 2],
+    ["Which of these is not an operating system?", ["itelxOS", "Linux", "Windows", "Python"], 3],
+    ["What does RAM lose when the power goes off?", ["nothing", "everything in it", "only the system", "only pictures"], 1],
+    ["Which file system does itelx read on USB sticks?", ["NTFS", "exFAT", "FAT32", "APFS"], 2],
+    ["In itelx, programs written in XVC end with...", [".exe", ".xvc", ".py", ".xvr"], 1],
+    ["In itelx, compiled executables end with...", [".xvr", ".elf", ".app", ".bin"], 0],
+    ["What does USB stand for?", ["Universal Serial Bus", "United System Board", "Ultra Speed Byte", "User Storage Box"], 0],
+    ["1 KiB is how many bytes?", ["1000", "1024", "512", "2048"], 1],
+    ["Which key combination stops a program in the itelx terminal?", ["Ctrl+Z", "Alt+F4", "Ctrl+C", "Esc"], 2],
+    ["Which planet is the largest in the solar system?", ["Earth", "Saturn", "Jupiter", "Neptune"], 2],
+    ["What is the boiling point of water at sea level?", ["90 C", "100 C", "110 C", "212 C"], 1],
+    ["Which gas do plants take in for photosynthesis?", ["oxygen", "nitrogen", "carbon dioxide", "helium"], 2],
+    ["How many continents are there?", ["5", "6", "7", "8"], 2],
+    ["Which is the longest river in Africa?", ["the Nile", "the Congo", "the Niger", "the Zambezi"], 0],
+    ["What is the chemical symbol of gold?", ["Go", "Gd", "Au", "Ag"], 2],
+    ["How many sides does a hexagon have?", ["5", "6", "7", "8"], 1],
+    ["What is 12 x 12?", ["124", "144", "132", "156"], 1],
+    ["Which is a prime number?", ["21", "27", "29", "33"], 2],
+    ["Light travels fastest through...", ["water", "glass", "air", "a vacuum"], 3],
+    ["Which organ pumps blood through the body?", ["the lungs", "the heart", "the liver", "the brain"], 1],
+    ["The Arabic numerals 0-9 reached Europe through...", ["Greek books", "Arabic scholars", "Roman roads", "Chinese paper"], 1],
+    ["Who wrote the first algebra book, Al-Kitab al-Mukhtasar?", ["Al-Khwarizmi", "Ibn Sina", "Al-Biruni", "Ibn al-Haytham"], 0]]
+
+let count = 10
+if len(args) > 1 and int(args[1]) != nil { count = int(args[1]) }
+if count > len(Q) { count = len(Q) }
+if count < 1 { count = 1 }
+
+# a shuffled list of the question numbers
+let order = []
+for i in range(len(Q)) { push(order, i) }
+for i in range(len(order) - 1, 0, -1) {
+    let j = random(i + 1)
+    let t = order[i]
+    order[i] = order[j]
+    order[j] = t
+}
+
+let LETTERS = ["a", "b", "c", "d"]
+let score = 0
+let asked = 0
+for n in range(count) {
+    let q = Q[order[n]]
+    print("")
+    print(color("cyan") + "question " + str(n + 1) + " of " + str(count) + color("reset") + "  " + q[0])
+    for i in range(4) { print("   " + LETTERS[i] + ") " + q[1][i]) }
+    write("your answer: ")
+    let answer = -1
+    while answer < 0 {
+        let k = key()
+        if k == nil or k == "esc" or k == chr(3) { break }
+        k = lower(k)
+        for i in range(4) {
+            if k == LETTERS[i] { answer = i }
+        }
+    }
+    if answer < 0 {
+        print("stopped")
+        break
+    }
+    asked += 1
+    if answer == q[2] {
+        score += 1
+        print(LETTERS[answer] + "  " + color("green") + "right" + color("reset"))
+    } else {
+        print(LETTERS[answer] + "  " + color("red") + "wrong" + color("reset") + " - it is " + LETTERS[q[2]] + ") " + q[1][q[2]])
+    }
+}
+print("")
+print("score: " + str(score) + " of " + str(asked))
+if asked > 0 and score == asked { print(color("green") + "perfect!" + color("reset")) }

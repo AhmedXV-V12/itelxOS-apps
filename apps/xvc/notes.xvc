@@ -1,0 +1,113 @@
+# notes.xvc - short notes with their date, kept in /dex/data/notes.txt
+#   notes                  all notes
+#   notes add <text>       a new note (notes add alone asks for the text)
+#   notes find <word>      the notes that contain a word
+#   notes del <n>          removes note n
+# The date is the computer clock's (time()).
+
+let DATA = "/dex/data"
+if not exists("/dex") { DATA = "data" }
+let FILE = DATA + "/notes.txt"
+
+fn two(n) {
+    if n < 10 { return "0" + str(n) }
+    return str(n)
+}
+
+# seconds since 1970 -> "2026-10-11 14:05"
+fn stamp(t) {
+    let days = t / 86400
+    let secs = t % 86400
+    let z = days + 719468
+    let era = z / 146097
+    let doe = z - era * 146097
+    let yoe = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365
+    let y = yoe + era * 400
+    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100)
+    let mp = (5 * doy + 2) / 153
+    let d = doy - (153 * mp + 2) / 5 + 1
+    let m = mp + 3
+    if mp >= 10 { m = mp - 9 }
+    if m <= 2 { y += 1 }
+    return str(y) + "-" + two(m) + "-" + two(d) + " " + two(secs / 3600) + ":" + two(secs % 3600 / 60)
+}
+
+fn load() {
+    let notes = []
+    let text = readfile(FILE)
+    if text == nil { return notes }
+    for line in split(text, "\n") {
+        let bar = find(line, "|")
+        if bar > 0 {
+            let t = int(substr(line, 0, bar))
+            if t != nil { push(notes, [t, substr(line, bar + 1)]) }
+        }
+    }
+    return notes
+}
+
+fn save(notes) {
+    if not exists(DATA) { makedir(DATA) }
+    let lines = []
+    for n in notes { push(lines, str(n[0]) + "|" + n[1]) }
+    let text = join(lines, "\n")
+    if len(lines) > 0 { text = text + "\n" }
+    return writefile(FILE, text)
+}
+
+fn show(notes, i) {
+    let n = str(i + 1)
+    if len(n) < 2 { n = " " + n }
+    print(n + ". " + color("dim") + stamp(notes[i][0]) + color("reset") + "  " + notes[i][1])
+}
+
+let notes = load()
+let cmd = "list"
+if len(args) > 1 { cmd = args[1] }
+let rest = []
+for i in range(2, len(args)) { push(rest, args[i]) }
+
+if cmd == "list" {
+    if len(notes) == 0 { print("no notes yet - write one: notes add <text>") }
+    for i in range(len(notes)) { show(notes, i) }
+} elif cmd == "add" {
+    let text = trim(join(rest, " "))
+    if text == "" {
+        text = input("note: ")
+        if text == nil { text = "" }
+        text = trim(text)
+    }
+    if text == "" {
+        print("nothing written")
+    } else {
+        push(notes, [time(), replace(text, "\n", " ")])
+        if save(notes) { print("note " + str(len(notes)) + " saved") }
+        else { print(color("red") + "cannot write " + FILE + color("reset")) }
+    }
+} elif cmd == "find" {
+    let word = lower(join(rest, " "))
+    if word == "" {
+        print("use: notes find <word>")
+    } else {
+        let found = 0
+        for i in range(len(notes)) {
+            if has(lower(notes[i][1]), word) {
+                show(notes, i)
+                found += 1
+            }
+        }
+        print(str(found) + " note(s) with \"" + word + "\"")
+    }
+} elif cmd == "del" {
+    let n = nil
+    if len(rest) == 1 { n = int(rest[0]) }
+    if n == nil or n < 1 or n > len(notes) {
+        print("use: notes del <n>   (the notes are 1 to " + str(len(notes)) + ")")
+    } else {
+        let gone = removeat(notes, n - 1)
+        save(notes)
+        print("removed: " + gone[1])
+    }
+} else {
+    print("use: notes [add <text> | find <word> | del <n>]")
+}

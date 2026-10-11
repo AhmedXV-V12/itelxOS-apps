@@ -1,0 +1,69 @@
+# typing.xvc - how fast and how well do you type?
+#   typing          3 sentences
+#   typing <n>      n sentences
+# Type each sentence and press Enter; the time starts when it appears.
+
+let SENTENCES = [
+    "the quick brown fox jumps over the lazy dog",
+    "itelx runs programs written in xvc and xvr",
+    "a small step every day makes a long road short",
+    "copy the programs to a usb stick and plug it in",
+    "practice makes the fingers find the keys alone",
+    "the terminal waits for your next command",
+    "knowledge is a light that grows when it is shared",
+    "save your work before you turn the computer off",
+    "the river carries the sand down to the sea",
+    "good code is easy to read and easy to change",
+    "every big program was once a small one that worked",
+    "patience and care beat speed in the long run"]
+
+let rounds = 3
+if len(args) > 1 and int(args[1]) != nil { rounds = int(args[1]) }
+
+# how many characters of typed match the sentence, position by position
+fn matching(want, got) {
+    let n = 0
+    let m = len(want)
+    if len(got) < m { m = len(got) }
+    for i in range(m) {
+        if want[i] == got[i] { n += 1 }
+    }
+    return n
+}
+
+let total_chars = 0
+let total_ok = 0
+let total_ms = 0
+let last = -1
+print("type each sentence exactly, then press Enter")
+for r in range(rounds) {
+    let pick = random(len(SENTENCES))
+    if pick == last { pick = (pick + 1) % len(SENTENCES) }
+    last = pick
+    let want = SENTENCES[pick]
+    print("")
+    print(color("cyan") + want + color("reset"))
+    let t0 = uptime()
+    let got = input("")
+    let ms = uptime() - t0
+    if got == nil { break }
+    got = trim(got)
+    if ms < 1 { ms = 1 }
+    let ok = matching(want, got)
+    let longer = len(want)
+    if len(got) > longer { longer = len(got) }
+    let wpm = len(got) * 12000 / ms
+    let accuracy = ok * 100 / longer
+    total_chars += len(got)
+    total_ok += ok
+    total_ms += ms
+    let c = "green"
+    if accuracy < 90 { c = "yellow" }
+    if accuracy < 60 { c = "red" }
+    print(color(c) + str(wpm) + " words per minute, " + str(accuracy) + "% right" + color("reset"))
+}
+if total_ms > 0 and total_chars > 0 {
+    print("")
+    print("overall: " + str(total_chars * 12000 / total_ms) + " words per minute, " +
+        str(total_ok * 100 / total_chars) + "% of the characters right")
+}

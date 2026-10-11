@@ -1,0 +1,81 @@
+# welcome.xvc - the itelxOS apps: what each one does and how to start it
+#   welcome            all the apps
+#   welcome <name>     how to use one of them
+
+let APPS = [
+    ["XVC programs (simple apps, run by the XVC interpreter)", ""],
+    ["calc", "a calculator that keeps fractions exact: calc 1/3 + 1/6"],
+    ["convert", "units: convert 10 km mi, convert 36.6 c f, convert units"],
+    ["base", "a number in decimal, hex, binary and octal: base 0xff"],
+    ["primes", "primes up to n, factors: primes 100, primes factor 360"],
+    ["cal", "today, the time and calendars: cal, cal 2027"],
+    ["timer", "countdown and stopwatch: timer 5m, timer"],
+    ["todo", "a to-do list: todo add <text>, todo done 1"],
+    ["notes", "notes with their date: notes add <text>, notes find <word>"],
+    ["contacts", "a phone book: contacts add, contacts find <name>"],
+    ["wc", "lines, words and characters of files: wc <file>"],
+    ["search", "find a text in files: search <text> [folder]"],
+    ["tree", "a folder as a tree with sizes: tree /dex"],
+    ["cipher", "secret writing for learning: cipher caesar 3 hello"],
+    ["typing", "how fast do you type? typing"],
+    ["table", "multiplication tables and practice: table, table show 7"],
+    ["quiz", "multiple-choice questions: quiz"],
+    ["hangman", "guess the word letter by letter: hangman"],
+    ["ttt", "tic-tac-toe against the computer: ttt, ttt easy"],
+    ["XVR programs (complex apps, written in C)", ""],
+    ["edit", "a text editor: edit <file>"],
+    ["fm", "a file manager: arrows, Enter, c copy, m move, d delete"],
+    ["sysmon", "memory, processes and CPU use, live: sysmon"],
+    ["sum", "CRC-32 and SHA-256 of files, and checking them: sum <file>"],
+    ["2048", "slide the tiles, reach 2048: 2048"],
+    ["sokoban", "push the boxes onto the targets: sokoban"],
+    ["mines", "minesweeper: mines, mines 16"],
+    ["life", "Conway's Game of Life: life, life glider"],
+    ["xvc2xvr", "make an XVR program from an XVC program: xvc2xvr <file.xvc>"]]
+
+fn installed(name) {
+    return exists("/dex/" + name + ".xvr") or exists("/dex/" + name + ".xvc")
+}
+
+fn pad(s, n) {
+    while len(s) < n { s = s + " " }
+    return s
+}
+
+if len(args) > 1 {
+    let name = args[1]
+    for path in ["/dex/" + name + ".xvc", "/dex/" + name + ".xvr"] {
+        if exists(path) and endswith(path, ".xvc") {
+            # an XVC program explains itself in its first comment lines
+            for line in split(readfile(path), "\n") {
+                if not startswith(line, "#") { break }
+                print(substr(line, 2))
+            }
+            exit(0)
+        }
+    }
+    for a in APPS {
+        if a[0] == name and a[1] != "" {
+            print(name + ": " + a[1])
+            if not installed(name) { print("(not installed)") }
+            exit(0)
+        }
+    }
+    print("no app called " + name + " - type welcome for the list")
+    exit(1)
+}
+
+print(color("cyan") + "itelxOS apps" + color("reset") + " - type a name to start it")
+for a in APPS {
+    if a[1] == "" {
+        print("")
+        print(color("yellow") + a[0] + color("reset"))
+    } else {
+        let mark = "  "
+        if not installed(a[0]) { mark = color("dim") + "- " + color("reset") }
+        print(mark + color("green") + pad(a[0], 9) + color("reset") + " " + a[1])
+    }
+}
+print("")
+print("welcome <name> tells more about one app; help lists the terminal's commands.")
+print("Your own programs: write name.xvc, run name.xvc, then xvc2xvr name.xvc makes name.xvr.")

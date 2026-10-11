@@ -1,0 +1,85 @@
+# hangman.xvc - guess the word one letter at a time, before the man is hanged
+#   hangman            the computer picks a word
+#   hangman <word>     a friend picks it (the screen is cleared at the start)
+# Type letters; Esc ends the game.
+
+let WORDS = ["keyboard", "computer", "terminal", "program", "kernel", "memory", "monitor",
+    "network", "window", "printer", "battery", "library", "language", "function", "variable",
+    "garden", "river", "mountain", "desert", "island", "ocean", "forest", "planet", "rocket",
+    "pyramid", "camel", "falcon", "dolphin", "elephant", "giraffe", "penguin", "rabbit",
+    "orange", "banana", "lemon", "mango", "tomato", "potato", "bread", "honey",
+    "teacher", "student", "doctor", "engineer", "pilot", "farmer", "painter", "writer",
+    "football", "tennis", "swimming", "chess", "puzzle", "bicycle", "airport", "station",
+    "bridge", "castle", "village", "market", "school", "museum", "hospital", "kitchen"]
+
+let STAGES = [
+    ["", "", "", "", "", "_______"],
+    ["  |", "  |", "  |", "  |", "  |", "__|____"],
+    ["  +----+", "  |", "  |", "  |", "  |", "__|____"],
+    ["  +----+", "  |    O", "  |", "  |", "  |", "__|____"],
+    ["  +----+", "  |    O", "  |    |", "  |", "  |", "__|____"],
+    ["  +----+", "  |    O", "  |   /|\\", "  |", "  |", "__|____"],
+    ["  +----+", "  |    O", "  |   /|\\", "  |   / \\", "  |", "__|____"]]
+let LIVES = len(STAGES) - 1
+
+let word = WORDS[random(len(WORDS))]
+if len(args) > 1 { word = lower(args[1]) }
+let guessed = []
+let misses = 0
+
+fn shown() {
+    let out = []
+    for c in word {
+        if has(guessed, c) or not (c >= "a" and c <= "z") { push(out, c) } else { push(out, "_") }
+    }
+    return join(out, " ")
+}
+
+fn solved() {
+    for c in word {
+        if c >= "a" and c <= "z" and not has(guessed, c) { return false }
+    }
+    return true
+}
+
+fn draw(message) {
+    clear()
+    print(color("cyan") + "HANGMAN" + color("reset") + "   lives: " + str(LIVES - misses) + "\n")
+    for line in STAGES[misses] { print(line) }
+    print("\n   " + color("yellow") + shown() + color("reset") + "\n")
+    let tried = []
+    for g in guessed { push(tried, g) }
+    sort(tried)
+    print("tried: " + join(tried, " "))
+    if message != "" { print(message) }
+}
+
+draw("type a letter (Esc to stop)")
+while true {
+    let k = key()
+    if k == nil or k == "esc" or k == chr(3) { print("\nthe word was: " + word); break }
+    k = lower(k)
+    if len(k) != 1 or not (k >= "a" and k <= "z") {
+        draw("letters a to z only")
+        continue
+    }
+    if has(guessed, k) {
+        draw("you tried " + k + " already")
+        continue
+    }
+    push(guessed, k)
+    if has(word, k) {
+        if solved() {
+            draw(color("green") + "you won! the word is " + word + color("reset"))
+            break
+        }
+        draw("yes, " + k + " is in the word")
+    } else {
+        misses += 1
+        if misses >= LIVES {
+            draw(color("red") + "hanged! the word was " + word + color("reset"))
+            break
+        }
+        draw("no " + k + " in the word")
+    }
+}

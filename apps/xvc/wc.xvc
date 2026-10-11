@@ -1,0 +1,37 @@
+# wc.xvc - counts the lines, words, characters and bytes of files
+#   wc <file> [more files...]
+# Characters are counted as letters, not bytes: Arabic text counts right.
+
+fn pad(s, n) {
+    s = str(s)
+    while len(s) < n { s = " " + s }
+    return s
+}
+
+if len(args) < 2 {
+    print("use: wc <file> [more files...]")
+    exit(1)
+}
+
+print(pad("lines", 8) + pad("words", 9) + pad("chars", 10) + pad("bytes", 10) + "  file")
+let total = [0, 0, 0, 0]
+let counted = 0
+for i in range(1, len(args)) {
+    let path = args[i]
+    if isdir(path) {
+        print(path + ": a directory")
+        continue
+    }
+    let text = readfile(path)
+    if text == nil {
+        print(path + ": cannot read it")
+        continue
+    }
+    let lines = len(split(text, "\n")) - 1
+    if text != "" and not endswith(text, "\n") { lines += 1 }
+    let n = [lines, len(split(text)), len(text), filesize(path)]
+    for k in range(4) { total[k] += n[k] }
+    counted += 1
+    print(pad(n[0], 8) + pad(n[1], 9) + pad(n[2], 10) + pad(n[3], 10) + "  " + path)
+}
+if counted > 1 { print(pad(total[0], 8) + pad(total[1], 9) + pad(total[2], 10) + pad(total[3], 10) + "  total") }

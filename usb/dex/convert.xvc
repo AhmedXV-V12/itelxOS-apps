@@ -1,0 +1,201 @@
+# convert.xvc - converts between units, with exact arithmetic
+#   convert 10 km mi          10 kilometres in miles
+#   convert 36.6 c f          degrees Celsius to Fahrenheit
+#   convert units             the units it knows
+#   convert                   asks, again and again (quit to leave)
+
+# unit -> [kind, numerator, denominator]: how many base units one unit is
+let U = {
+    "mm": ["length", 1, 1000], "cm": ["length", 1, 100], "m": ["length", 1, 1],
+    "km": ["length", 1000, 1], "in": ["length", 254, 10000], "ft": ["length", 3048, 10000],
+    "yd": ["length", 9144, 10000], "mi": ["length", 1609344, 1000],
+    "mg": ["mass", 1, 1000], "g": ["mass", 1, 1], "kg": ["mass", 1000, 1], "t": ["mass", 1000000, 1],
+    "oz": ["mass", 28349523125, 1000000000], "lb": ["mass", 45359237, 100000],
+    "ml": ["volume", 1, 1000], "l": ["volume", 1, 1], "m3": ["volume", 1000, 1],
+    "gal": ["volume", 3785411784, 1000000000],
+    "s": ["time", 1, 1], "min": ["time", 60, 1], "h": ["time", 3600, 1], "day": ["time", 86400, 1],
+    "week": ["time", 604800, 1],
+    "bit": ["data", 1, 8], "B": ["data", 1, 1], "KB": ["data", 1000, 1], "MB": ["data", 1000000, 1],
+    "GB": ["data", 1000000000, 1], "TB": ["data", 1000000000000, 1], "KiB": ["data", 1024, 1],
+    "MiB": ["data", 1048576, 1], "GiB": ["data", 1073741824, 1], "TiB": ["data", 1099511627776, 1],
+    "kmh": ["speed", 1000, 3600], "mps": ["speed", 1, 1], "mph": ["speed", 1609344, 3600000],
+    "knot": ["speed", 1852, 3600],
+    "c": ["temperature", 1, 1], "f": ["temperature", 1, 1], "k": ["temperature", 1, 1]}
+
+let LIMIT = 100_000_000_000_000_000
+let err = nil
+
+fn iabs(x) {
+    if x < 0 { return -x }
+    return x
+}
+
+fn gcd(a, b) {
+    a = iabs(a)
+    b = iabs(b)
+    while b != 0 {
+        let t = a % b
+        a = b
+        b = t
+    }
+    return a
+}
+
+fn imul(a, b) {
+    if a == 0 or b == 0 { return 0 }
+    if iabs(a) > LIMIT / iabs(b) {
+        err = "the number is too large"
+        return 0
+    }
+    return a * b
+}
+
+fn frac(n, d) {
+    if d < 0 {
+        n = -n
+        d = -d
+    }
+    let g = gcd(n, d)
+    if g > 1 {
+        n = n / g
+        d = d / g
+    }
+    return [n, d]
+}
+
+fn fmul(x, y) {
+    let g1 = gcd(x[0], y[1])
+    let g2 = gcd(y[0], x[1])
+    if g1 == 0 { g1 = 1 }
+    if g2 == 0 { g2 = 1 }
+    return frac(imul(x[0] / g1, y[0] / g2), imul(x[1] / g2, y[1] / g1))
+}
+
+fn fadd(x, y) {
+    let g = gcd(x[1], y[1])
+    return frac(imul(x[0], y[1] / g) + imul(y[0], x[1] / g), imul(x[1] / g, y[1]))
+}
+
+# "12.5" or "-3" -> a fraction, or nil
+fn parse(text) {
+    let neg = startswith(text, "-")
+    if neg { text = substr(text, 1) }
+    let parts = split(text, ".")
+    if len(parts) > 2 or text == "" or text == "." { return nil }
+    let digits = parts[0]
+    let scale = 1
+    if len(parts) == 2 {
+        digits = digits + parts[1]
+        for i in range(len(parts[1])) { scale = scale * 10 }
+    }
+    if digits == "" or len(digits) > 16 { return nil }
+    for c in digits {
+        if c < "0" or c > "9" { return nil }
+    }
+    let v = int(digits)
+    if neg { v = -v }
+    return frac(v, scale)
+}
+
+# a fraction as a decimal, rounded to 6 places
+fn decimal(x) {
+    let n = iabs(x[0])
+    let d = x[1]
+    let whole = n / d
+    let r = n % d
+    let digits = ""
+    for i in range(7) {
+        r = r * 10
+        digits = digits + str(r / d)
+        r = r % d
+    }
+    let six = int(substr(digits, 0, 6))
+    if int(substr(digits, 6, 1)) >= 5 { six += 1 }
+    if six == 1000000 {
+        six = 0
+        whole += 1
+    }
+    let frac_text = str(six)
+    while len(frac_text) < 6 { frac_text = "0" + frac_text }
+    while endswith(frac_text, "0") { frac_text = substr(frac_text, 0, len(frac_text) - 1) }
+    let out = str(whole)
+    if frac_text != "" { out = out + "." + frac_text }
+    if x[0] < 0 and out != "0" { out = "-" + out }
+    return out
+}
+
+fn to_kelvin(v, u) {
+    if u == "k" { return v }
+    if u == "c" { return fadd(v, [27315, 100]) }
+    return fadd(fmul(fadd(v, [-32, 1]), [5, 9]), [27315, 100])
+}
+
+fn from_kelvin(v, u) {
+    if u == "k" { return v }
+    let c = fadd(v, [-27315, 100])
+    if u == "c" { return c }
+    return fadd(fmul(c, [9, 5]), [32, 1])
+}
+
+fn units() {
+    let kinds = {}
+    for u in keys(U) {
+        let k = U[u][0]
+        if not has(kinds, k) { kinds[k] = [] }
+        push(kinds[k], u)
+    }
+    let names = keys(kinds)
+    sort(names)
+    for k in names {
+        let list = kinds[k]
+        sort(list)
+        print("  " + k + ": " + join(list, " "))
+    }
+}
+
+# the unit's name as in U: exactly, else ignoring upper and lower case
+fn unit(name) {
+    if has(U, name) { return name }
+    for u in keys(U) {
+        if lower(u) == lower(name) { return u }
+    }
+    return nil
+}
+
+fn convert(amount, from_name, to_name) {
+    err = nil
+    let v = parse(amount)
+    if v == nil { print("not a number: " + amount); return }
+    let from = unit(from_name)
+    let to = unit(to_name)
+    if from == nil { print("unknown unit: " + from_name + " (convert units shows them)"); return }
+    if to == nil { print("unknown unit: " + to_name + " (convert units shows them)"); return }
+    let a = U[from]
+    let b = U[to]
+    if a[0] != b[0] { print("cannot convert " + a[0] + " to " + b[0]); return }
+    let r = nil
+    if a[0] == "temperature" { r = from_kelvin(to_kelvin(v, from), to) }
+    else { r = fmul(fmul(v, [a[1], a[2]]), [b[2], b[1]]) }
+    if err != nil { print(err); return }
+    print(amount + " " + from + " = " + color("yellow") + decimal(r) + " " + to + color("reset"))
+}
+
+if len(args) == 2 and args[1] == "units" {
+    units()
+} elif len(args) == 4 {
+    convert(args[1], args[2], args[3])
+} elif len(args) == 1 {
+    print("type: <amount> <from> <to>, for example 10 km mi  (units: the list, quit: leave)")
+    while true {
+        let line = input("convert> ")
+        if line == nil { break }
+        let w = split(line)
+        if len(w) == 0 { continue }
+        if w[0] == "quit" or w[0] == "exit" or w[0] == "q" { break }
+        if w[0] == "units" { units() }
+        elif len(w) == 3 { convert(w[0], w[1], w[2]) }
+        else { print("type: <amount> <from> <to>, for example 36.6 c f") }
+    }
+} else {
+    print("use: convert <amount> <from> <to>   or   convert units")
+}

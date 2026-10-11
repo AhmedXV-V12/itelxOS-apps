@@ -1,0 +1,83 @@
+# search.xvc - finds a text in the files of a folder and its folders
+#   search <text> [folder]       the lines with the text (the folder: here)
+#   search -i <text> [folder]    the same, ignoring upper and lower case
+# Text files up to 1 MiB are searched; programs and other binary files are
+# skipped, and so is /ram (the machine's memory).
+
+let SKIP_EXT = [".xvr", ".img", ".iso", ".bin", ".elf", ".efi", ".zip", ".gz", ".png", ".jpg", ".mp3", ".mp4"]
+let ignore_case = false
+let words = []
+for i in range(1, len(args)) {
+    if args[i] == "-i" { ignore_case = true } else { push(words, args[i]) }
+}
+if len(words) < 1 or len(words) > 2 {
+    print("use: search [-i] <text> [folder]")
+    exit(1)
+}
+let needle = words[0]
+let folder = "."
+if len(words) == 2 { folder = words[1] }
+if ignore_case { needle = lower(needle) }
+
+let files = 0
+let hits = 0
+let skipped = 0
+
+fn binary(text) {
+    for c in substr(text, 0, 512) {
+        if c == "\0" { return true }
+    }
+    return false
+}
+
+fn skip_name(name) {
+    let l = lower(name)
+    for e in SKIP_EXT {
+        if endswith(l, e) { return true }
+    }
+    return false
+}
+
+fn search_file(path) {
+    if skip_name(path) { return }
+    let size = filesize(path)
+    if size == nil or size > 1048576 {
+        skipped += 1
+        return
+    }
+    let text = readfile(path)
+    if text == nil or binary(text) {
+        skipped += 1
+        return
+    }
+    files += 1
+    let n = 0
+    for line in split(text, "\n") {
+        n += 1
+        let hay = line
+        if ignore_case { hay = lower(line) }
+        let at = find(hay, needle)
+        if at >= 0 {
+            hits += 1
+            let shown = substr(line, 0, at) + color("yellow") + substr(line, at, len(needle)) + color("reset") +
+                substr(line, at + len(needle))
+            print(color("cyan") + path + color("reset") + ":" + str(n) + ": " + shown)
+        }
+    }
+}
+
+fn walk(dir) {
+    if dir == "/ram" { return }
+    let names = listdir(dir)
+    if names == nil { return }
+    sort(names)
+    for name in names {
+        let path = dir + "/" + name
+        if dir == "/" { path = "/" + name }
+        if isdir(path) { walk(path) } else { search_file(path) }
+    }
+}
+
+if isdir(folder) { walk(folder) } else { search_file(folder) }
+print(str(hits) + " line(s) found in " + str(files) + " file(s)")
+if skipped > 0 { print(str(skipped) + " file(s) skipped (too large or not text)") }

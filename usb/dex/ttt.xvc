@@ -1,0 +1,131 @@
+# ttt.xvc - tic-tac-toe against the computer
+#   ttt          the computer never loses (try to get a draw)
+#   ttt easy     the computer plays half its moves at random
+# You are X and start. Press 1-9 for a square (as on the board), q to stop.
+
+let easy = len(args) > 1 and args[1] == "easy"
+let LINES = [[0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6]]
+let ORDER = [4, 0, 2, 6, 8, 1, 3, 5, 7]       # the computer's preference among equal moves
+let board = []
+
+fn winner(b) {
+    for l in LINES {
+        if b[l[0]] != " " and b[l[0]] == b[l[1]] and b[l[1]] == b[l[2]] { return b[l[0]] }
+    }
+    return nil
+}
+
+fn full(b) {
+    for c in b {
+        if c == " " { return false }
+    }
+    return true
+}
+
+# the value of board b for O, with "who" to move: above 0 O wins (sooner is
+# more), 0 a draw, below 0 X wins. Alpha-beta search between alpha and beta.
+fn minimax(b, who, depth, alpha, beta) {
+    let w = winner(b)
+    if w == "O" { return 10 - depth }
+    if w == "X" { return depth - 10 }
+    if full(b) { return 0 }
+    for i in ORDER {
+        if b[i] == " " {
+            b[i] = who
+            let v = 0
+            if who == "O" { v = minimax(b, "X", depth + 1, alpha, beta) }
+            else { v = minimax(b, "O", depth + 1, alpha, beta) }
+            b[i] = " "
+            if who == "O" and v > alpha { alpha = v }
+            if who == "X" and v < beta { beta = v }
+            if alpha >= beta { break }
+        }
+    }
+    if who == "O" { return alpha }
+    return beta
+}
+
+fn computer_move() {
+    if easy and random(2) == 0 {
+        let free = []
+        for i in range(9) {
+            if board[i] == " " { push(free, i) }
+        }
+        return free[random(len(free))]
+    }
+    let best = -100
+    let move = -1
+    for i in ORDER {
+        if board[i] == " " {
+            board[i] = "O"
+            let v = minimax(board, "X", 1, best, 100)
+            board[i] = " "
+            if v > best {
+                best = v
+                move = i
+            }
+        }
+    }
+    return move
+}
+
+fn cell(i) {
+    let c = board[i]
+    if c == "X" { return color("yellow") + "X" + color("reset") }
+    if c == "O" { return color("cyan") + "O" + color("reset") }
+    return color("dim") + str(i + 1) + color("reset")
+}
+
+fn draw(message) {
+    clear()
+    print("TIC-TAC-TOE   you: X   computer: O")
+    if easy { print("(easy)") }
+    print("")
+    for r in range(3) {
+        print("   " + cell(r * 3) + " | " + cell(r * 3 + 1) + " | " + cell(r * 3 + 2))
+        if r < 2 { print("  ---+---+---") }
+    }
+    print("")
+    print(message)
+}
+
+let wins = 0
+let losses = 0
+let draws = 0
+let playing = true
+while playing {
+    board = [" ", " ", " ", " ", " ", " ", " ", " ", " "]
+    let message = "your move: press 1-9"
+    let result = nil
+    while result == nil {
+        draw(message)
+        let k = key()
+        if k == nil or k == "q" or k == "esc" or k == chr(3) {
+            playing = false
+            break
+        }
+        let n = int(k)
+        if n == nil or n < 1 or n > 9 or board[n - 1] != " " {
+            message = "pick a free square, 1-9"
+            continue
+        }
+        board[n - 1] = "X"
+        if winner(board) == "X" { result = "you win!" }
+        elif full(board) { result = "a draw." }
+        else {
+            let m = computer_move()
+            board[m] = "O"
+            if winner(board) == "O" { result = "the computer wins." }
+            elif full(board) { result = "a draw." }
+            else { message = "the computer took " + str(m + 1) + " - your move" }
+        }
+    }
+    if not playing { break }
+    if result == "you win!" { wins += 1 }
+    elif result == "a draw." { draws += 1 }
+    else { losses += 1 }
+    draw(result + "   (you " + str(wins) + " - computer " + str(losses) + " - draws " + str(draws) + ")\nplay again? (y/n)")
+    let k = key()
+    playing = k == "y" or k == "Y" or k == "enter"
+}
+print("bye: you " + str(wins) + ", computer " + str(losses) + ", draws " + str(draws))

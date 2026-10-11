@@ -1,0 +1,126 @@
+# todo.xvc - a to-do list, kept in /dex/data/todo.txt
+#   todo                  shows the list and asks what to do
+#   todo add <text>       adds an item
+#   todo done <n>         marks item n done (again: not done)
+#   todo del <n>          removes item n
+#   todo clear            removes the items that are done
+
+let DATA = "/dex/data"
+if not exists("/dex") { DATA = "data" }
+let FILE = DATA + "/todo.txt"
+let items = []
+
+fn load() {
+    items = []
+    let text = readfile(FILE)
+    if text == nil { return }
+    for line in split(text, "\n") {
+        if len(line) > 2 and substr(line, 1, 1) == "|" {
+            push(items, [substr(line, 0, 1) == "1", substr(line, 2)])
+        }
+    }
+}
+
+fn save() {
+    if not exists(DATA) { makedir(DATA) }
+    let lines = []
+    for it in items {
+        let mark = "0"
+        if it[0] { mark = "1" }
+        push(lines, mark + "|" + it[1])
+    }
+    let text = join(lines, "\n")
+    if len(lines) > 0 { text = text + "\n" }
+    if not writefile(FILE, text) { print(color("red") + "cannot write " + FILE + color("reset")) }
+}
+
+fn show() {
+    if len(items) == 0 {
+        print("the list is empty - add something: add <text>")
+        return
+    }
+    let open = 0
+    for i in range(len(items)) {
+        let it = items[i]
+        let n = str(i + 1)
+        if len(n) < 2 { n = " " + n }
+        if it[0] {
+            print(color("dim") + n + ". [x] " + it[1] + color("reset"))
+        } else {
+            print(n + ". [ ] " + it[1])
+            open += 1
+        }
+    }
+    print(color("cyan") + str(open) + " to do, " + str(len(items) - open) + " done" + color("reset"))
+}
+
+# the item number in word, or nil (with a message)
+fn number(word) {
+    let n = int(word)
+    if n == nil or n < 1 or n > len(items) {
+        print("no item " + str(word) + " (the items are 1 to " + str(len(items)) + ")")
+        return nil
+    }
+    return n - 1
+}
+
+# runs one command (a list of words); false when it was not a command
+fn command(words) {
+    if len(words) == 0 { return true }
+    let c = words[0]
+    let rest = []
+    for i in range(1, len(words)) { push(rest, words[i]) }
+    if c == "add" {
+        let text = trim(join(rest, " "))
+        if text == "" { print("use: add <text>"); return true }
+        push(items, [false, text])
+        save()
+        print("added " + str(len(items)) + ". " + text)
+    } elif c == "done" or c == "del" {
+        if len(rest) != 1 { print("use: " + c + " <number>"); return true }
+        let i = number(rest[0])
+        if i == nil { return true }
+        if c == "done" {
+            items[i][0] = not items[i][0]
+            save()
+            if items[i][0] { print("done: " + items[i][1]) } else { print("not done: " + items[i][1]) }
+        } else {
+            let it = removeat(items, i)
+            save()
+            print("removed: " + it[1])
+        }
+    } elif c == "clear" {
+        let keep = []
+        for it in items {
+            if not it[0] { push(keep, it) }
+        }
+        let gone = len(items) - len(keep)
+        items = keep
+        save()
+        print("removed " + str(gone) + " done item(s)")
+    } elif c == "list" {
+        show()
+    } else {
+        return false
+    }
+    return true
+}
+
+load()
+if len(args) > 1 {
+    let words = []
+    for i in range(1, len(args)) { push(words, args[i]) }
+    if not command(words) { print("use: todo [add <text> | done <n> | del <n> | clear]") }
+    exit(0)
+}
+
+show()
+print("commands: add <text>, done <n>, del <n>, clear, list, quit")
+while true {
+    let line = input("todo> ")
+    if line == nil { break }
+    let words = split(line)
+    if len(words) == 0 { continue }
+    if words[0] == "quit" or words[0] == "exit" or words[0] == "q" { break }
+    if not command(words) { print("commands: add <text>, done <n>, del <n>, clear, list, quit") }
+}

@@ -1,0 +1,144 @@
+# cal.xvc - the date, the time and calendars
+#   cal                   today, the time, and this month
+#   cal <month> <year>    one month, e.g. cal 3 2027
+#   cal <year>            the whole year, e.g. cal 2027
+# The date comes from the computer's clock.
+
+let MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August",
+    "September", "October", "November", "December"]
+let DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+
+fn two(n) {
+    if n < 10 { return "0" + str(n) }
+    return str(n)
+}
+
+# days since 1970-01-01 -> [year, month, day]
+fn civil(days) {
+    let z = days + 719468
+    let era = z / 146097
+    let doe = z - era * 146097
+    let yoe = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365
+    let y = yoe + era * 400
+    let doy = doe - (365 * yoe + yoe / 4 - yoe / 100)
+    let mp = (5 * doy + 2) / 153
+    let d = doy - (153 * mp + 2) / 5 + 1
+    let m = mp + 3
+    if mp >= 10 { m = mp - 9 }
+    if m <= 2 { y += 1 }
+    return [y, m, d]
+}
+
+# [year, month, day] -> days since 1970-01-01
+fn days_from(y, m, d) {
+    if m <= 2 { y -= 1 }
+    let era = y / 400
+    let yoe = y - era * 400
+    let mm = m + 9
+    if m > 2 { mm = m - 3 }
+    let doy = (153 * mm + 2) / 5 + d - 1
+    let doe = yoe * 365 + yoe / 4 - yoe / 100 + doy
+    return era * 146097 + doe - 719468
+}
+
+fn leap(y) { return (y % 4 == 0 and y % 100 != 0) or y % 400 == 0 }
+
+fn month_days(y, m) {
+    if m == 2 {
+        if leap(y) { return 29 }
+        return 28
+    }
+    if m == 4 or m == 6 or m == 9 or m == 11 { return 30 }
+    return 31
+}
+
+fn weekday(days) { return (days + 4) % 7 }        # 0 Sunday; 1970-01-01 was a Thursday
+
+fn center(s, n) {
+    let left = (n - len(s)) / 2
+    let out = " " * left + s
+    while len(out) < n { out = out + " " }
+    return out
+}
+
+# a month as 8 lines of 20 characters; today (a day number) is coloured
+fn month_lines(y, m, today) {
+    let lines = [center(MONTHS[m - 1] + " " + str(y), 20), "Su Mo Tu We Th Fr Sa"]
+    let first = weekday(days_from(y, m, 1))
+    let line = "   " * first
+    let col = first
+    for d in range(1, month_days(y, m) + 1) {
+        let cell = str(d)
+        if d < 10 { cell = " " + cell }
+        if d == today { cell = color("yellow") + cell + color("reset") }
+        line = line + cell
+        col += 1
+        if col == 7 {
+            push(lines, line)
+            line = ""
+            col = 0
+        } else {
+            line = line + " "
+        }
+    }
+    if col > 0 { push(lines, line) }
+    while len(lines) < 8 { push(lines, "") }
+    return lines
+}
+
+let now = time()
+let t = civil(now / 86400)
+let secs = now % 86400
+
+if len(args) == 1 {
+    print(DAYS[weekday(now / 86400)] + ", " + str(t[2]) + " " + MONTHS[t[1] - 1] + " " + str(t[0]) +
+        "   " + two(secs / 3600) + ":" + two(secs % 3600 / 60) + ":" + two(secs % 60))
+    print("")
+    for line in month_lines(t[0], t[1], t[2]) { print(line) }
+    exit(0)
+}
+
+let a = int(args[1])
+let b = nil
+if len(args) > 2 { b = int(args[2]) }
+if a == nil or (len(args) > 2 and b == nil) {
+    print("use: cal [month year | year]")
+    exit(1)
+}
+
+if b != nil {
+    if a < 1 or a > 12 or b < 1 or b > 9999 {
+        print("the month is 1 to 12, the year 1 to 9999")
+        exit(1)
+    }
+    let today = 0
+    if a == t[1] and b == t[0] { today = t[2] }
+    for line in month_lines(b, a, today) { print(line) }
+    exit(0)
+}
+
+if a < 1 or a > 9999 {
+    print("the year is 1 to 9999")
+    exit(1)
+}
+print(center(str(a), 66))
+for row in range(4) {
+    let blocks = []
+    for c in range(3) {
+        let m = row * 3 + c + 1
+        let today = 0
+        if a == t[0] and m == t[1] { today = t[2] }
+        push(blocks, month_lines(a, m, today))
+    }
+    for i in range(8) {
+        let line = ""
+        for c in range(3) {
+            let part = blocks[c][i]
+            # coloured days carry escape codes: pad by the visible length
+            let visible = replace(replace(part, color("yellow"), ""), color("reset"), "")
+            line = line + part + " " * (20 - len(visible))
+            if c < 2 { line = line + "   " }
+        }
+        print(line)
+    }
+}

@@ -1,0 +1,61 @@
+# table.xvc - multiplication tables: see them, then practise
+#   table                 10 questions from the tables of 2 to 12
+#   table 7               10 questions from the table of 7
+#   table show 7          the table of 7
+#   table show            the whole table, 1 to 12
+
+fn pad(s, n) {
+    s = str(s)
+    while len(s) < n { s = " " + s }
+    return s
+}
+
+fn show(n) {
+    for i in range(1, 13) { print(pad(n, 3) + " x " + pad(i, 2) + " = " + pad(n * i, 3)) }
+}
+
+fn grid() {
+    let head = "    |"
+    for c in range(1, 13) { head = head + pad(c, 4) }
+    print(color("cyan") + head + color("reset"))
+    print("----+" + "----" * 12)
+    for r in range(1, 13) {
+        let line = color("cyan") + pad(r, 3) + color("reset") + " |"
+        for c in range(1, 13) { line = line + pad(r * c, 4) }
+        print(line)
+    }
+}
+
+if len(args) > 1 and args[1] == "show" {
+    if len(args) > 2 and int(args[2]) != nil { show(int(args[2])) } else { grid() }
+    exit(0)
+}
+
+let only = nil
+if len(args) > 1 { only = int(args[1]) }
+let right = 0
+let total = 10
+let start = uptime()
+print("answer 10 questions (an empty line stops)")
+for q in range(total) {
+    let a = only
+    if a == nil { a = random(11) + 2 }
+    let b = random(12) + 1
+    let line = input(str(q + 1) + ")  " + str(a) + " x " + str(b) + " = ")
+    if line == nil or trim(line) == "" {
+        total = q
+        break
+    }
+    let got = int(trim(line))
+    if got == a * b {
+        right += 1
+        print("    " + color("green") + "right" + color("reset"))
+    } else {
+        print("    " + color("red") + "no" + color("reset") + ", " + str(a) + " x " + str(b) + " = " + str(a * b))
+    }
+}
+let secs = (uptime() - start) / 1000
+print("")
+print(str(right) + " of " + str(total) + " right in " + str(secs) + " seconds")
+if total > 0 and right == total { print(color("green") + "excellent!" + color("reset")) }
+elif total > 0 and right * 2 < total { print("practise the table: table show <n>") }

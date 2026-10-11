@@ -15,5 +15,5 @@ What a program for itelxOS 1.3 is built with. Everything here except
 | `xvcapp/` | new here: the XVC interpreter with a payload segment for one program; with an empty payload it is `xvc2xvr` |
 
 How to use it: [docs/en/4-xvr-in-c.md](../docs/en/4-xvr-in-c.md)
-([بالعربي](../docs/ar/4-xvr-in-c.md)); the `Makefile` at the top builds
+([Arabic](../docs/ar/4-xvr-in-c.md)); the `Makefile` at the top builds
 everything.

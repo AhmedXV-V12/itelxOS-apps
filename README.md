@@ -7,18 +7,6 @@ guide in Arabic and English.
 
 <p align="center"><img src="screenshots/welcome.png" alt="The welcome app on itelxOS 1.3" width="760"></p>
 
-## بالعربي
-
-مستودع تطبيقات لنظام **itelxOS**: تطبيقات بسيطة بلغة **XVC**، وتطبيقات معقدة
-مبنية كملفات تنفيذية **XVR**، وأداة تحويل من XVC إلى XVR، والـ SDK لتكتب
-تطبيقاتك أنت. الشرح الكامل بالعربي في [`docs/ar`](docs/ar/README.md):
-ما هي لغة XVC، وكيف تكتب برنامجك الأول، وكيف تحوّله إلى XVR، وكيف تنقله إلى
-النظام بفلاشة FAT32.
-
-**للتثبيت بسرعة:** هيّئ فلاشة بنظام FAT32، وانسخ إليها محتويات المجلد
-[`usb/`](usb)، ثم وصّلها بـ itelx وأجب بـ `yes` على السؤال
-`are you need update ?`. بعدها اكتب `welcome`.
-
 ## Install them in one minute
 
 1. Format a USB stick as **FAT32** (exFAT and NTFS are not read by itelx 1.3).
@@ -79,13 +67,13 @@ Details, also for Windows, Linux and macOS: [docs/en/5-usb-fat32.md](docs/en/5-u
 
 ## Learn
 
-| | English | العربية |
+| | English | Arabic |
 |---|---|---|
-| 1 | [The XVC language](docs/en/1-xvc-language.md) | [لغة XVC](docs/ar/1-xvc-language.md) |
-| 2 | [Your first program](docs/en/2-first-program.md) | [برنامجك الأول](docs/ar/2-first-program.md) |
-| 3 | [From XVC to XVR](docs/en/3-xvc-to-xvr.md) | [من XVC إلى XVR](docs/ar/3-xvc-to-xvr.md) |
-| 4 | [XVR apps in C](docs/en/4-xvr-in-c.md) | [تطبيقات XVR بلغة C](docs/ar/4-xvr-in-c.md) |
-| 5 | [USB sticks and FAT32](docs/en/5-usb-fat32.md) | [النقل بالفلاشة FAT32](docs/ar/5-usb-fat32.md) |
+| 1 | [The XVC language](docs/en/1-xvc-language.md) | [Arabic](docs/ar/1-xvc-language.md) |
+| 2 | [Your first program](docs/en/2-first-program.md) | [Arabic](docs/ar/2-first-program.md) |
+| 3 | [From XVC to XVR](docs/en/3-xvc-to-xvr.md) | [Arabic](docs/ar/3-xvc-to-xvr.md) |
+| 4 | [XVR apps in C](docs/en/4-xvr-in-c.md) | [Arabic](docs/ar/4-xvr-in-c.md) |
+| 5 | [USB sticks and FAT32](docs/en/5-usb-fat32.md) | [Arabic](docs/ar/5-usb-fat32.md) |
 
 ## XVC to XVR
 

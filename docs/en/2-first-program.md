@@ -1,6 +1,6 @@
 # 2. Your first program
 
-[← Contents](README.md) · [العربية](../ar/2-first-program.md)
+[← Contents](README.md) · [Arabic](../ar/2-first-program.md)
 
 ## Where to write it
 

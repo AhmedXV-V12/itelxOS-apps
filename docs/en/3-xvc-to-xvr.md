@@ -1,6 +1,6 @@
 # 3. From XVC to XVR
 
-[← Contents](README.md) · [العربية](../ar/3-xvc-to-xvr.md)
+[← Contents](README.md) · [Arabic](../ar/3-xvc-to-xvr.md)
 
 ## What an XVR file is
 

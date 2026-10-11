@@ -7,10 +7,4 @@ type: welcome
 
 Put your own .xvc and .xvr programs into dex/ too.
 
----
-
-انسخ كل ما في هذا المجلد (الملف update.xvr والمجلد dex) إلى أعلى فلاشة
-مهيأة بنظام FAT32. وصّل الفلاشة بـ itelxOS 1.3 وأجب بـ "yes" على السؤال
-"are you need update ?" فتُثبَّت التطبيقات في /dex. ثم اكتب: welcome
-
-https://github.com/AhmedXV-V12/itelxOS-apps
+The guide, in English and Arabic: https://github.com/AhmedXV-V12/itelxOS-apps

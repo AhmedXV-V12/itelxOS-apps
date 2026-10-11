@@ -1,6 +1,6 @@
 # Learn to make apps for itelxOS
 
-[العربية](../ar/README.md)
+[Arabic](../ar/README.md)
 
 itelxOS is a 64-bit operating system with its own kernel, its own file
 system (ITFS) and its own terminal. It runs two kinds of programs:

@@ -1,6 +1,6 @@
 # 5. Getting programs onto itelx with a USB stick
 
-[← Contents](README.md) · [العربية](../ar/5-usb-fat32.md)
+[← Contents](README.md) · [Arabic](../ar/5-usb-fat32.md)
 
 itelx 1.3 reads and writes USB sticks (and card readers and external disks)
 formatted as **FAT32** (FAT16 and FAT12 too). **exFAT and NTFS are not

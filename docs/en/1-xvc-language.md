@@ -1,6 +1,6 @@
 # 1. The XVC language
 
-[← Contents](README.md) · [العربية](../ar/1-xvc-language.md)
+[← Contents](README.md) · [Arabic](../ar/1-xvc-language.md)
 
 XVC is the programming language of itelxOS. A program is a text file that
 ends in `.xvc`; the terminal runs it with `run name.xvc` (or just `name`

@@ -3,7 +3,7 @@
 Each app is one `.xvc` file that starts with a comment telling how to use it
 (`welcome <name>` shows that comment on itelx). They are short on purpose:
 read them next to [the language guide](../../docs/en/1-xvc-language.md)
-([بالعربي](../../docs/ar/1-xvc-language.md)).
+([Arabic](../../docs/ar/1-xvc-language.md)).
 
 | app | try | shows how to |
 |---|---|---|

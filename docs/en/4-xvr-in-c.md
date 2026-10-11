@@ -1,6 +1,6 @@
 # 4. XVR apps in C
 
-[← Contents](README.md) · [العربية](../ar/4-xvr-in-c.md)
+[← Contents](README.md) · [Arabic](../ar/4-xvr-in-c.md)
 
 The complex apps of this repository (`edit`, `fm`, `sysmon`, `2048`,
 `sokoban`, `mines`, `life`, `sum`) are written in C and built into XVR

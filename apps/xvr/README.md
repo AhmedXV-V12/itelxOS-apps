@@ -3,7 +3,7 @@
 Each folder is one app: `make` builds `apps/xvr/NAME/*.c` with libitx and
 [`apps/lib`](../lib) into `NAME.xvr` and copies it into `usb/dex/`. How it
 works: [docs/en/4-xvr-in-c.md](../../docs/en/4-xvr-in-c.md)
-([بالعربي](../../docs/ar/4-xvr-in-c.md)).
+([Arabic](../../docs/ar/4-xvr-in-c.md)).
 
 | app | use | keys |
 |---|---|---|

@@ -1,0 +1,13 @@
+# Work mode: what it installs (tools/mkczpayload.py)
+info:/about.txt=customizers/work_mode/about.txt
+info:/after.txt=customizers/work_mode/after.txt
+dir:/home
+dir:/home/work
+itfs:/system/terminal.xvr={B}/cz/apps/work.xvr
+itfs:/system/recustomize.xvr={B}/cz/recustomize.xvr
+# the tools of its menu (apps of this repository)
+itfs:/dex/calc.xvc=apps/xvc/calc.xvc
+itfs:/dex/convert.xvc=apps/xvc/convert.xvc
+itfs:/dex/fm.xvr={B}/xvr/fm.xvr
+itfs:/dex/edit.xvr={B}/xvr/edit.xvr
+itfs:/dex/sum.xvr={B}/xvr/sum.xvr

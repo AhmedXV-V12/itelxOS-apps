@@ -1,0 +1,5 @@
+let a = 10
+let b = 0
+print("before")
+print(a / b)
+print("never printed")

@@ -1,0 +1,32 @@
+itelxOS licences
+================
+
+itelxOS is under two licences: one for the kernel, which may be used and
+shared but not changed, and one for the userspace, which anyone may change.
+
+  The Kernel: itelx Kernel License 1.0          LICENSES/itelx-Kernel-License-1.0.txt
+    kernel/   boot/   itfs/
+    Use it for anything, including commercially; share it unchanged, also on
+    installation media such as the ODE installer; read it; send changes back.
+    Modified versions may not be distributed.
+
+  The userspace: Mozilla Public License 2.0     LICENSES/MPL-2.0.txt
+    system/  (init, the itelx terminal, the XVC language, libitx, crt0)
+    dex/     (applications and example programs)
+    abi/     (the system call interface)
+    xvr/     (the XVR executable format)
+    tools/   (build and host tools)
+    Makefile, build/, tests/
+    Change it and share it. Changed files of the userspace stay under the
+    MPL 2.0 and their source must be available; your own programs that use it
+    may be under any licence.
+
+  Programs that run on itelxOS through its system calls and the XVR / XVC
+  formats are not derived from the kernel and may be under any licence.
+
+  Third-party files keep their own licences:
+    third_party/unifont/   GNU Unifont glyphs, SIL Open Font License 1.1
+    third_party/unicode/   Unicode Character Database, Unicode licence
+  The installed system carries these texts in /system/licenses.
+
+Copyright (c) 2026 Ahmed Walid (AXV).

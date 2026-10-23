@@ -1,0 +1,51 @@
+# XVC language test: every line must print ok
+let fails = 0
+fn check(name, got, want) {
+    if got == want { print("ok " + name) }
+    else { print("FAIL " + name + ": got " + str(got) + ", want " + str(want)); fails += 1 }
+}
+check("arith", 2 + 3 * 4 - 10 / 2 % 3, 12)
+check("neg", -(5 - 8), 3)
+check("compare", 3 < 4 and not (4 < 3) or false, true)
+check("string", "ab" + "cd" + 1, "abcd1")
+check("repeat", "ab" * 3, "ababab")
+check("len-ar", len("سلام"), 4)
+check("index-ar", "سلام"[1], "ل")
+check("substr", substr("itelx-os", 6, 2), "os")
+check("find", find("hello world", "world"), 6)
+check("split", len(split("a,b,,c", ",")), 4)
+check("join", join([1, "x", 3], "-"), "1-x-3")
+check("replace", replace("aXbXc", "X", "--"), "a--b--c")
+check("upper", upper("itelx"), "ITELX")
+check("int", int("42") + int("0x10"), 58)
+check("int-bad", int("4x2"), nil)
+let l = [5, 3, 9, 1]
+sort(l)
+check("sort", str(l), "[1, 3, 5, 9]")
+push(l, 10)
+check("push", len(l), 5)
+check("pop", pop(l), 10)
+let m = {"a": 1, "b": 2}
+m["c"] = 3
+check("map", m["a"] + m["b"] + m["c"], 6)
+check("map-missing", m["zz"], nil)
+check("has", has(m, "b"), true)
+let total = 0
+for i in range(1, 101) { total += i }
+check("range-sum", total, 5050)
+let s = 0
+let i = 0
+while true { i += 1; if i % 2 == 0 { continue }; if i > 9 { break }; s += i }
+check("while-break-continue", s, 25)
+fn fact(n) { if n <= 1 { return 1 } return n * fact(n - 1) }
+check("recursion", fact(20), 2432902008176640000)
+let chars = 0
+for c in "مرحبا" { chars += 1 }
+check("iter-string", chars, 5)
+check("chr-ord", ord(chr(1575)), 1575)
+check("nested-list", [[1, 2], [3]][0][1], 2)
+let big = []
+for k in range(20000) { push(big, str(k)) }
+check("gc-survives", big[19999], "19999")
+check("type", type(m) + type(l) + type(1) + type("") + type(nil), "maplistintstringnil")
+if fails == 0 { print("XVC SELFTEST PASSED") } else { print("XVC SELFTEST FAILED: " + str(fails)) }

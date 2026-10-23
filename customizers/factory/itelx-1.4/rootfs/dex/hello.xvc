@@ -1,0 +1,5 @@
+# hello.xvc - the first XVC program
+print("Hello from XVC!")
+print("مرحبا من XVC")
+let name = "itelx"
+print("this is " + name + " " + str(1) + "." + str(3))

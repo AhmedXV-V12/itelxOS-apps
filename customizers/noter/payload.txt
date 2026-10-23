@@ -1,0 +1,7 @@
+# Noter: what it installs (tools/mkczpayload.py)
+info:/about.txt=customizers/noter/about.txt
+info:/after.txt=customizers/noter/after.txt
+dir:/home
+dir:/home/noter
+itfs:/system/terminal.xvr={B}/cz/apps/noter.xvr
+itfs:/system/recustomize.xvr={B}/cz/recustomize.xvr

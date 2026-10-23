@@ -1,0 +1,11 @@
+# arabic.xvc - Arabic text in XVC: strings count characters, not bytes
+let greeting = "السلام عليكم"
+print(greeting)
+print("عدد الحروف: " + str(len(greeting)))
+let words = split(greeting)
+print("الكلمة الأولى: " + words[0])
+print("mixed: itelx نظام تشغيل 64-bit")
+let days = {"sat": "السبت", "sun": "الأحد", "mon": "الاثنين"}
+for k in keys(days) {
+    print(k + " = " + days[k])
+}

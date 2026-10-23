@@ -1,0 +1,10 @@
+rootfs
+rootfs/boot
+rootfs/dex
+rootfs/dex/tests
+rootfs/dex/tests/bad
+rootfs/kernel
+rootfs/media
+rootfs/ram
+rootfs/system
+rootfs/system/licenses

@@ -1,3 +1,9 @@
 * text=auto eol=lf
 *.xvr binary
 *.png binary
+# the customizer apps: kept byte for byte (their SHA-256 sums are checked)
+*.patch -text
+customizers/factory/** -text
+customizers/kernel/out/** -text
+customizers/release/** -text
+customizers/third_party/** -text

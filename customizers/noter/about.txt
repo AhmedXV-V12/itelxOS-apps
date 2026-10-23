@@ -1,0 +1,7 @@
+Noter turns itelx into a journal. Instead of the terminal, itelx starts
+Noter: a timeline of your entries, a calendar of the days you wrote, "on
+this day" (a week, a month and years ago), insights (streaks, moods, tags,
+words), a question of the day and templates (daily reflection, gratitude,
+evening review, ...). Entries have a mood, #tags and a journal; you can
+search them, lock Noter with a passcode, and export the journal to a USB
+stick. Arabic and English (Alt+Shift).

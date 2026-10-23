@@ -1,0 +1,8 @@
+Work mode turns itelx into a workplace. Instead of the terminal, itelx
+starts Work mode: a dashboard of the day, tasks on a list or a board
+(backlog, to do, doing, review, done) with priorities, due days, estimates,
+checklists and tasks that wait for others, projects with deadlines, budgets
+and hourly rates, a timer that keeps running across restarts and a weekly
+timesheet, meetings with agendas and minutes whose action items become
+tasks, people and a deals pipeline, notes, invoices made from billable
+time, expenses, and reports for a week, a month or a year.

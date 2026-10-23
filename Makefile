@@ -8,6 +8,8 @@
 #   make host-xvc    build/host/xvc: the XVC interpreter for this PC, to try
 #                    XVC programs before they go to itelx
 #   make check       tests of the PC tools (xvc2xvr.py, xvrinfo.py)
+#   make customizers the customizer apps for itelxOS 1.4 -> customizers/release
+#                    (customizers/customizers.mk, customizers/README.md)
 #   make clean
 #
 # make cannot work in a path with spaces: clone the repository into a
@@ -94,6 +96,9 @@ check: usb host-xvc
 
 clean:
 	rm -rf $(B)
+
+# ------------------------------------------------- the customizer apps
+include customizers/customizers.mk
 
 .PHONY: all usb host-xvc check clean
 -include $(shell find $(B) -name '*.d' 2>/dev/null)

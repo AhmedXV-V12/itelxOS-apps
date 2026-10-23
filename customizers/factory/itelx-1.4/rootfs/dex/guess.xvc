@@ -1,0 +1,14 @@
+# guess.xvc - a small game: guess the number
+let secret = random(100) + 1
+let tries = 0
+print("I picked a number from 1 to 100.")
+while true {
+    let line = input("your guess: ")
+    if line == nil { break }
+    let g = int(line)
+    if g == nil { print("that is not a number"); continue }
+    tries += 1
+    if g < secret { print("higher") }
+    elif g > secret { print("lower") }
+    else { print("right, in " + str(tries) + " tries"); break }
+}

@@ -2,3 +2,5 @@ build/
 __pycache__/
 *.pyc
 data/
+# the kernel data_place carries is not app data
+!customizers/kernel/out/data/

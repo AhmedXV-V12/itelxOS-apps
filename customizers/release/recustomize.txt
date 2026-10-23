@@ -1,0 +1,939 @@
+recustomize 1.0 - puts itelx back as it was installed
+==============================================================================
+
+This is the text version of recustomize.xvr: what it is, what it installs and the
+source code of its installer. Installing is done with recustomize.xvr itself;
+this file is for reading. Licence: MPL-2.0 (customizers/LICENSE in the
+itelxOS-apps repository); the itelx files inside are under their own licences.
+
+recustomize.xvr: 1811931 bytes, SHA-256 71a6d2e399140280e36e36e8ad40d91b87e2d19fdff2c207b58038f71cd71a25
+
+------------------------------------------------------------------------------
+How to install
+------------------------------------------------------------------------------
+On itelx 1.4, from a USB stick (FAT32) with recustomize.xvr on it:
+    install /media/<STICK>/recustomize.xvr      then    recustomize
+or run it straight from the stick:   /media/<STICK>/recustomize.xvr
+or copy it to the top of the stick as update.xvr and plug the stick in:
+itelx asks "are you need update ?"; answer yes.
+It brings its own kernel: run from the terminal, it puts itself on a USB
+stick as update.xvr and asks you to plug the stick in again, because
+itelx 1.4 lets only an update you accept write the kernel.
+
+------------------------------------------------------------------------------
+What it puts on itelx (57 entries)
+------------------------------------------------------------------------------
+  /boot/                                   folder
+  /dex/                                    folder
+  /dex/tests/                              folder
+  /dex/tests/bad/                          folder
+  /kernel/                                 folder
+  /media/                                  folder
+  /ram/                                    folder
+  /system/                                 folder
+  /system/licenses/                        folder
+  /boot/BOOTX64.EFI                        system disk       270848 bytes  sha256 1554c92517d8cf1905243b38b3320ec454d82e5c6e774bd4c213d0f15b60ba62
+  /boot/initrd.img                         system disk       177962 bytes  sha256 0e81532acd678f1e70660494ca71161b5376c6d484ca8d2abb005577379257c1
+  /boot/mbr.bin                            system disk          512 bytes  sha256 02ec7fc5d32414d2ddafcf802d5b401e3a18cb2c722f087e2fcd5152f876eaa8
+  /boot/stage2.bin                         system disk        10528 bytes  sha256 2d205f23dfd8352b319d485f4b032a754f3137f6da0fe5e3d2180737ec8f0f5c
+  /boot/vmlinuz                            system disk       266240 bytes  sha256 1c06b9dccfcb7f66d267f3b84a70390e71f36487615286429bf8d359d6a90c57
+  /dex/arabic.xvc                          system disk          439 bytes  sha256 15a4120a2bf7b91bea00eddb38d3cac5c9a8a1e71862c51444274840d9a92e1c
+  /dex/counter.xvc                         system disk          324 bytes  sha256 915a4eb6ad67bedf4e0614fb44637ecd06f3d3278d85b474e1b941db8c6b1031
+  /dex/crash.xvr                           system disk        12013 bytes  sha256 ed8599f50ca768fb865ea503be4364ba28f15528f9116b47b8109e55fd033199
+  /dex/fib.xvc                             system disk          238 bytes  sha256 c685d1cadf6589a9ae98de9af858b454d2489f8611a566e82dc90889150f5da2
+  /dex/files.xvc                           system disk          351 bytes  sha256 0b59cb5c776ef26deffa91cbee7d8d8ba24bb3f9012d75400e2191cc4061c45d
+  /dex/guess.xvc                           system disk          449 bytes  sha256 542337f28de348ce67d46aa9e587f42c75bc68c8d0644fe751c4281b4837e231
+  /dex/hello.xvc                           system disk          164 bytes  sha256 375fa391687748c6b95803e66f3e07c0ace9437d28eb3d59f7b7db80f5d30c37
+  /dex/hello.xvr                           system disk        11930 bytes  sha256 a49be40bb60ca115e89a660019583626df285eeaa5430a9e2b27f4f6851c88b0
+  /dex/memhog.xvr                          system disk        11887 bytes  sha256 a252261c3c79a9e833db9db1b9954b838e056117199a40644282f383e5d94010
+  /dex/ramscan.xvr                         system disk        12639 bytes  sha256 0fc6f6e0307f25d80a5fa16c3de0fce8823f3ab32c13bae44b178f251c81e51f
+  /dex/spin.xvr                            system disk        12062 bytes  sha256 82889dca4d7fec46d015e4549c7c0d3bc97bb2ae4ab2e30e3872bee49d3db4f8
+  /dex/tests/bad/bad-checksum.xvr          system disk        11930 bytes  sha256 d094f18082194a51ddc8d42bee5896f21b73e7ebc16012f43a92287ae760e6d4
+  /dex/tests/bad/bad-magic.xvr             system disk        11930 bytes  sha256 66798829ad5055dd76728a53aea0d14b403a3fa88b1ab78fa8f502947d22aa44
+  /dex/tests/bad/data-past-end.xvr         system disk        11930 bytes  sha256 064444850b4bdd3bbbcac5187779b265becb10f281794ca59536a932b006b6d7
+  /dex/tests/bad/empty.xvr                 system disk            0 bytes  sha256 e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+  /dex/tests/bad/entry-in-data.xvr         system disk        11930 bytes  sha256 55a457df5f5c83b377d56e28ed2b77af0860b235d8334d2aa81ff2dee2b17669
+  /dex/tests/bad/huge-segment.xvr          system disk        11930 bytes  sha256 4a5e4d79349f1326f9f71ef5ab2f790b0322f01a72dd18c476919c62059f4f45
+  /dex/tests/bad/kernel-address.xvr        system disk        11930 bytes  sha256 f168cf23603ac53c9afc44f22c2c8acc439a20d711bf37b4703a406e48b66666
+  /dex/tests/bad/overlap.xvr               system disk        11930 bytes  sha256 a7aeb983d92e5f973957d1b84a5a1b2c0fb89290d1f1115f2a3acb202cf711b7
+  /dex/tests/bad/text.xvr                  system disk           38 bytes  sha256 37579ef905dfbff2d86ea741fd467e96fad97dff5701bdf58532c00a73d8c963
+  /dex/tests/bad/too-many-segments.xvr     system disk        11930 bytes  sha256 41991fe93e1e77b61a13543829803584be6356c9e531d44a1a8420c926926db8
+  /dex/tests/bad/truncated.xvr             system disk         5965 bytes  sha256 afaa438ae3f9080487c5d248bddbe514bdd88b23e9e2a8daf7492de3f99b7334
+  /dex/tests/bad/write-exec.xvr            system disk        11930 bytes  sha256 5d1088c56d37887eb244e2c5d60c4f71d1ba90d1683401af5183b476e4910457
+  /dex/tests/recursion.xvc                 system disk           42 bytes  sha256 40369fc07c5cde3e42f062aec7669229fcf6f77051a72ae51df47e9589021933
+  /dex/tests/runtime-error.xvc             system disk           73 bytes  sha256 8e7cc2d4725364de3e98a39e2dfeb629d5194a5867585571d87a1a8c82abd85e
+  /dex/tests/selftest.xvc                  system disk         1921 bytes  sha256 1ca1d364ad2cd9fa0655ec32b61de837b8a5241fb6590c9b518251ed0032bdd5
+  /dex/tests/syntax-error.xvc              system disk           83 bytes  sha256 06f8ef76ded2fc6d35690b589ae877f6edb27f7da507c53e293f66aa08732817
+  /dex/tests/types.xvc                     system disk           31 bytes  sha256 f3d27e745f646b202fb6f267069524766fea940b1eb1942d3437e9c828adda22
+  /dex/tests/undefined.xvc                 system disk           20 bytes  sha256 d94dac04b91e33b71ff1530ee53877da0b0cccc0891343da18ed33c660b87b37
+  /kernel/VERSION                          system disk           10 bytes  sha256 93ed29981bd6d3ae7abc9b5e2fe23e4585e8b90e952ccd0065f2c8abf751c0c8
+  /kernel/itelx.elf                        system disk       242104 bytes  sha256 ba0a9e3fbe3d0cf6024801e27289ededa2e59a0f54153c0f0b62636fc4d790c0
+  /system/README.txt                       system disk         1968 bytes  sha256 118a9e023da28a31abd40386d15ffcd775d1be42cf65e31398bf6236f22ee2b1
+  /system/init.xvr                         system disk        12153 bytes  sha256 8495e839a759969d8bd52756cc959470d1fed65f9d37281c549a49b1e6cda687
+  /system/licenses/LICENSE.txt             system disk         1460 bytes  sha256 d22abd6fa4e9832cdfae6a003cf280e462ff7868856573a4a38876605cb7a80a
+  /system/licenses/MPL-2.0.txt             system disk        16726 bytes  sha256 fab3dd6bdab226f1c08630b1dd917e11fcb4ec5e1e020e2c16f83a0a13863e85
+  /system/licenses/itelx-Kernel-License-1.0.txt system disk         3387 bytes  sha256 803ceb43a397c0c2077279121715fe431e159c78f2393c0e288054e6075a86b9
+  /system/licenses/unicode-data.txt        system disk         3517 bytes  sha256 9c2d400b7b6065235f656936ee86fefe66b75d93158a7630b28ee567dd7bf3e8
+  /system/licenses/unifont-OFL-1.1.txt     system disk         4340 bytes  sha256 869692af094c57fb7258c57fe26820c759319603321d0ffeb278de3651763ded
+  /system/terminal.xvr                     system disk        50930 bytes  sha256 99197d7a279e4515e6e25a47ad3253b57b32725aa9ed155f13510a7b94757f09
+  /system/top.xvr                          system disk        32626 bytes  sha256 af41d5af7aac0287e1e8b3d12af17ba992fc507878f369a4708c7b3a5c62c898
+  /system/xvc.xvr                          system disk        61155 bytes  sha256 ff9817ceeae367c5ecbc4d816ced7c33ca6e2825447d086ff709b2517b56fbc3
+  /boot/vmlinuz                            boot partition    266240 bytes  sha256 1c06b9dccfcb7f66d267f3b84a70390e71f36487615286429bf8d359d6a90c57
+  /boot/initrd.img                         boot partition    177962 bytes  sha256 0e81532acd678f1e70660494ca71161b5376c6d484ca8d2abb005577379257c1
+
+------------------------------------------------------------------------------
+The installer's source code (C, built with the itelxOS SDK)
+------------------------------------------------------------------------------
+
+==> customizers/common/cz.h <==
+/* cz: what the customizer installers (cz_install.c) and recustomize share.
+ *
+ * A customizer app is one XVR file: this installer with a payload (made by
+ * tools/mkczpayload.py) that holds every file it puts on the system: the
+ * apps, the program that takes the terminal's place, and, for some, an
+ * itelx kernel with more drivers.
+ *
+ * The kernel lives on the system's boot partition. itelx 1.4 lets only an
+ * update the user accepted write it (the "are you need update ?" question
+ * of a USB stick), so a customizer that brings a kernel installs from a
+ * stick: run from the terminal, it copies itself to a stick as update.xvr
+ * and asks the user to plug the stick in again.
+ */
+#ifndef CZ_H
+#define CZ_H
+
+#include <itx.h>
+
+#define CZ_CYAN   "\x1b[96m"
+#define CZ_YELLOW "\x1b[93m"
+#define CZ_GREEN  "\x1b[92m"
+#define CZ_RED    "\x1b[91m"
+#define CZ_DIM    "\x1b[90m"
+#define CZ_RESET  "\x1b[0m"
+
+/* ------------------------------------------------------------- payload */
+
+#define T_ITFS 1            /* a file for the system disk */
+#define T_BOOT 2            /* a file for the system's boot partition */
+#define T_DIR  4            /* a directory to make on the system disk */
+#define T_INFO 8            /* kept for the installer (about.txt) */
+
+struct cz_head {
+    char magic[8];          /* "ITXCZ001" */
+    uint32_t count;
+    uint32_t version;       /* major << 8 | minor */
+    char id[16];
+    char title[32];
+};
+
+struct cz_entry {
+    char path[104];
+    uint32_t targets;
+    uint32_t offset;        /* from the start of the payload */
+    uint32_t size;
+    uint32_t crc;
+    uint8_t reserved[8];
+};
+
+extern const unsigned char cz_payload[], cz_payload_end[];
+
+const struct cz_head *cz_head(void);
+const struct cz_entry *cz_entries(void);
+const unsigned char *cz_data(const struct cz_entry *e);
+const struct cz_entry *cz_find(const char *path);
+bool cz_verify(char *why, size_t len);          /* every file intact */
+
+/* -------------------------------------------------------------- checks */
+
+void     cz_crc_init(void);
+uint32_t cz_crc(uint32_t crc, const void *data, size_t len);
+bool     cz_file_crc(const char *path, uint32_t *crc, uint64_t *size);
+int      cz_version_num(const char *v);        /* "itelx 1.4 net" -> 0x0104 */
+bool     cz_system_ok(void);                   /* itelx 1.4, or says why not */
+
+/* ------------------------------------------------------------- writing */
+
+enum { F_SAME, F_DONE, F_ROFS, F_FAIL };
+
+void cz_make_dirs(const char *file);           /* the directories above a file */
+/* one file put in place: NAME.new written, read back, checked, renamed */
+int  cz_install(const char *dst, const void *data, uint32_t size, uint32_t crc, char *why, size_t wlen);
+int  cz_copy_file(const char *from, const char *to, uint32_t *crc);
+void cz_join(char *out, size_t len, const char *root, const char *path);
+
+/* --------------------------------------------------------- the machine */
+
+bool cz_find_boot(char *out, size_t len);      /* the system's boot partition in /media */
+bool cz_boot_writable(const char *boot);       /* this process may write it */
+bool cz_find_stick(char *out, size_t len, const char *not_this);   /* a writable USB volume */
+bool cz_ask_yes(const char *q);                /* yes/no on the terminal */
+bool cz_ask_word(const char *q, const char *word);   /* the exact word typed */
+int  cz_restart_terminal(void);                /* init starts /system/terminal.xvr again */
+int  cz_stop_others(void);                     /* stops every program but this one, its starters and init */
+void cz_today(char *out, size_t len);          /* YYYY-MM-DD HH:MM */
+
+/* -------------------------------------------- the update stick (kernel) */
+
+#define CZ_STICK_MARK "itelx-customizer.txt"
+
+/* copies this program to a USB stick as update.xvr; false when there is
+ * no stick or it could not be written (the reason is printed) */
+bool cz_to_stick(const char *self, const char *title);
+/* after an install from a stick this program prepared: update.xvr and the
+ * mark go, an update.xvr that was there before comes back */
+void cz_clean_stick(const char *stick);
+
+/* -------------------------------------------- what is installed (state) */
+
+#define CZ_STATE "/system/customizer.txt"
+
+struct cz_state {
+    char id[16];
+    char title[32];
+    char version[8];
+    char installed[24];
+    bool kernel;
+};
+bool cz_state_read(struct cz_state *s);
+
+#endif
+
+==> customizers/common/cz.c <==
+/* cz: the shared part of the customizer installers and recustomize (cz.h). */
+#include "cz.h"
+
+/* ------------------------------------------------------------- CRC-32 */
+
+static uint32_t crc_tab[256];
+
+void cz_crc_init(void) {
+    for (uint32_t i = 0; i < 256; i++) {
+        uint32_t c = i;
+        for (int k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320u ^ (c >> 1) : c >> 1;
+        crc_tab[i] = c;
+    }
+}
+
+uint32_t cz_crc(uint32_t crc, const void *data, size_t len) {
+    const unsigned char *p = data;
+    crc = ~crc;
+    while (len--) crc = crc_tab[(crc ^ *p++) & 0xFF] ^ (crc >> 8);
+    return ~crc;
+}
+
+bool cz_file_crc(const char *path, uint32_t *crc, uint64_t *size) {
+    int fd = open(path, O_RDONLY);
+    if (fd < 0) return false;
+    struct itx_stat st;
+    if (fstat(fd, &st) || st.type != VT_FILE) { close(fd); return false; }
+    static unsigned char buf[65536];
+    uint32_t c = 0;
+    uint64_t n = 0;
+    for (;;) {
+        ssize_t r = read(fd, buf, sizeof buf);
+        if (r < 0) { close(fd); return false; }
+        if (r == 0) break;
+        c = cz_crc(c, buf, (size_t)r);
+        n += (uint64_t)r;
+    }
+    close(fd);
+    *crc = c;
+    *size = n;
+    return true;
+}
+
+/* ------------------------------------------------------------- payload */
+
+const struct cz_head *cz_head(void) { return (const struct cz_head *)cz_payload; }
+const struct cz_entry *cz_entries(void) { return (const struct cz_entry *)(cz_payload + sizeof(struct cz_head)); }
+const unsigned char *cz_data(const struct cz_entry *e) { return cz_payload + e->offset; }
+
+const struct cz_entry *cz_find(const char *path) {
+    const struct cz_entry *e = cz_entries();
+    for (uint32_t i = 0; i < cz_head()->count; i++)
+        if (!strcmp(e[i].path, path)) return &e[i];
+    return NULL;
+}
+
+bool cz_verify(char *why, size_t len) {
+    const struct cz_head *h = cz_head();
+    size_t span = (size_t)(cz_payload_end - cz_payload);
+    if (span < sizeof *h || memcmp(h->magic, "ITXCZ001", 8) || !h->count || h->count > 4096 ||
+        sizeof *h + (size_t)h->count * sizeof(struct cz_entry) > span) {
+        snprintf(why, len, "the files inside are missing or damaged");
+        return false;
+    }
+    const struct cz_entry *e = cz_entries();
+    for (uint32_t i = 0; i < h->count; i++) {
+        if (e[i].path[sizeof e[i].path - 1] || (uint64_t)e[i].offset + e[i].size > span ||
+            cz_crc(0, cz_data(&e[i]), e[i].size) != e[i].crc) {
+            snprintf(why, len, "%.100s inside it is damaged", e[i].path);
+            return false;
+        }
+    }
+    return true;
+}
+
+/* -------------------------------------------------------------- checks */
+
+int cz_version_num(const char *v) {
+    const char *p = strchr(v, ' ');
+    p = p ? p + 1 : v;
+    int major = (int)strtol(p, (char **)&p, 10), minor = 0;
+    if (*p == '.') minor = (int)strtol(p + 1, NULL, 10);
+    return major << 8 | minor;
+}
+
+bool cz_system_ok(void) {
+    struct itx_sysinfo si;
+    if (sysinfo(&si)) { printf(CZ_RED "cannot read what system this is" CZ_RESET "\n"); return false; }
+    int v = cz_version_num(si.version);
+    if (v == 0x0104) return true;
+    printf(CZ_RED "this is %s; customizer apps are made for itelx 1.4" CZ_RESET "\n", si.version);
+    if (v < 0x0104) printf("Update to itelx 1.4 first (its update.xvr), then run this again.\n");
+    return false;
+}
+
+/* ------------------------------------------------------------- writing */
+
+void cz_join(char *out, size_t len, const char *root, const char *path) {
+    snprintf(out, len, "%s%s", strcmp(root, "/") ? root : "", path);
+}
+
+void cz_make_dirs(const char *file) {
+    char p[ITX_PATH_MAX];
+    strlcpy(p, file, sizeof p);
+    for (char *s = p + 1; *s; s++) {
+        if (*s != '/') continue;
+        *s = 0;
+        struct itx_stat st;
+        if (stat(p, &st)) mkdir(p);
+        *s = '/';
+    }
+}
+
+int cz_install(const char *dst, const void *data, uint32_t size, uint32_t crc, char *why, size_t wlen) {
+    uint32_t c;
+    uint64_t sz;
+    if (cz_file_crc(dst, &c, &sz) && c == crc && sz == size) return F_SAME;
+    cz_make_dirs(dst);
+    char tmp[ITX_PATH_MAX];
+    snprintf(tmp, sizeof tmp, "%s.new", dst);
+    remove(tmp);
+    int fd = open(tmp, O_WRONLY | O_CREATE | O_TRUNC);
+    if (fd == -EROFS) return F_ROFS;
+    if (fd < 0) { snprintf(why, wlen, "%s: %s", tmp, strerror(fd)); return F_FAIL; }
+    const unsigned char *d = data;
+    uint32_t done = 0;
+    while (done < size) {
+        uint32_t n = size - done > 65536 ? 65536 : size - done;
+        ssize_t w = write(fd, d + done, n);
+        if (w <= 0) {
+            close(fd);
+            remove(tmp);
+            if (w == -EROFS) return F_ROFS;
+            snprintf(why, wlen, "%s: %s", tmp, w < 0 ? strerror((int)w) : "disk full");
+            return F_FAIL;
+        }
+        done += (uint32_t)w;
+    }
+    close(fd);
+    sync();
+    if (!cz_file_crc(tmp, &c, &sz) || c != crc || sz != size) {
+        remove(tmp);
+        snprintf(why, wlen, "%s: what was written does not read back the same", tmp);
+        return F_FAIL;
+    }
+    /* the old file stays as NAME.old until the new one is in place */
+    char old[ITX_PATH_MAX];
+    snprintf(old, sizeof old, "%s.old", dst);
+    struct itx_stat st;
+    bool had = stat(dst, &st) == 0;
+    if (had) {
+        remove(old);
+        int r = rename(dst, old);
+        if (r) { remove(tmp); snprintf(why, wlen, "%s: %s", dst, strerror(r)); return r == -EROFS ? F_ROFS : F_FAIL; }
+    }
+    int r = rename(tmp, dst);
+    if (r) {
+        if (had) rename(old, dst);
+        remove(tmp);
+        snprintf(why, wlen, "%s: %s", dst, strerror(r));
+        return F_FAIL;
+    }
+    if (had) remove(old);
+    sync();
+    return F_DONE;
+}
+
+int cz_copy_file(const char *from, const char *to, uint32_t *crc) {
+    int in = open(from, O_RDONLY);
+    if (in < 0) return in;
+    int out = open(to, O_WRONLY | O_CREATE | O_TRUNC);
+    if (out < 0) { close(in); return out; }
+    static unsigned char buf[65536];
+    uint32_t c = 0;
+    int r = 0;
+    for (;;) {
+        ssize_t n = read(in, buf, sizeof buf);
+        if (n == 0) break;
+        if (n < 0) { r = (int)n; break; }
+        if (write(out, buf, (size_t)n) != n) { r = -ENOSPC; break; }
+        c = cz_crc(c, buf, (size_t)n);
+    }
+    close(in);
+    int e = close(out);
+    if (crc) *crc = c;
+    return r ? r : e;
+}
+
+/* --------------------------------------------------------- the machine */
+
+bool cz_find_boot(char *out, size_t len) {
+    struct itx_diskinfo dk[32];
+    int n = disklist(dk, 32);
+    for (int i = 0; i < n; i++) {
+        char *b = strstr(dk[i].use, " (boot files)");
+        if (!b) continue;
+        size_t l = (size_t)(b - dk[i].use);
+        if (l >= len) l = len - 1;
+        memcpy(out, dk[i].use, l);
+        out[l] = 0;
+        return true;
+    }
+    return false;
+}
+
+bool cz_boot_writable(const char *boot) {
+    char probe[ITX_PATH_MAX];
+    snprintf(probe, sizeof probe, "%s/boot/czprobe.tmp", boot);
+    int fd = open(probe, O_WRONLY | O_CREATE | O_TRUNC);
+    if (fd < 0) return false;
+    close(fd);
+    remove(probe);
+    return true;
+}
+
+bool cz_find_stick(char *out, size_t len, const char *not_this) {
+    struct itx_diskinfo dk[32];
+    int n = disklist(dk, 32);
+    for (int i = 0; i < n; i++) {
+        if (!dk[i].usb_id || strncmp(dk[i].use, "/media/", 7)) continue;
+        char path[64];
+        strlcpy(path, dk[i].use, sizeof path);
+        char *sp = strchr(path, ' ');
+        if (sp) *sp = 0;
+        if (not_this && !strcmp(path, not_this)) continue;
+        struct itx_fsinfo fi;
+        if (fsinfo(path, &fi) || (fi.flags & ST_RDONLY)) continue;
+        strlcpy(out, path, len);
+        return true;
+    }
+    return false;
+}
+
+static bool read_answer(char *line, size_t len) {
+    flush();
+    ssize_t n = read(0, line, len - 1);
+    if (n <= 0) { line[0] = 0; return false; }
+    line[n] = 0;
+    while (n > 0 && (line[n - 1] == '\n' || line[n - 1] == ' ' || line[n - 1] == '\r')) line[--n] = 0;
+    return true;
+}
+
+bool cz_ask_yes(const char *q) {
+    printf("%s (yes/no) ", q);
+    char line[32];
+    if (!read_answer(line, sizeof line)) return false;
+    return !strcmp(line, "yes") || !strcmp(line, "y") || !strcmp(line, "Yes") || !strcmp(line, "YES");
+}
+
+bool cz_ask_word(const char *q, const char *word) {
+    printf("%s ", q);
+    char line[64];
+    if (!read_answer(line, sizeof line)) return false;
+    return !strcmp(line, word);
+}
+
+int cz_restart_terminal(void) {
+    struct itx_procinfo p[80];
+    int n = proclist(p, 80), init = 0, done = 0;
+    for (int i = 0; i < n; i++) if (!p[i].kernel && !strcmp(p[i].name, "init.xvr")) init = p[i].pid;
+    for (int i = 0; i < n; i++) {
+        if (p[i].kernel || p[i].ppid != init || p[i].pid == getpid()) continue;
+        if (strcmp(p[i].name, "terminal.xvr")) continue;
+        if (kill(p[i].pid) == 0) done++;
+    }
+    return done;
+}
+
+int cz_stop_others(void) {
+    struct itx_procinfo p[80];
+    int n = proclist(p, 80), done = 0;
+    /* this program, the ones that started it (the terminal), and init stay */
+    int keep[16], nk = 0, pid = getpid();
+    for (int guard = 0; pid > 0 && nk < 16 && guard < 16; guard++) {
+        keep[nk++] = pid;
+        int parent = 0;
+        for (int i = 0; i < n; i++) if (p[i].pid == pid) parent = p[i].ppid;
+        pid = parent;
+    }
+    for (int i = 0; i < n; i++) {
+        if (p[i].kernel || p[i].state == PS_ZOMBIE || !strcmp(p[i].name, "init.xvr")) continue;
+        bool k = false;
+        for (int j = 0; j < nk; j++) if (keep[j] == p[i].pid) k = true;
+        if (!k && kill(p[i].pid) == 0) done++;
+    }
+    if (done) sleep_ms(500);
+    return done;
+}
+
+void cz_today(char *out, size_t len) {
+    long t = unix_time();
+    long days = t / 86400, secs = t % 86400;
+    /* days since 1970 to a civil date (Howard Hinnant's algorithm) */
+    long z = days + 719468, era = (z >= 0 ? z : z - 146096) / 146097;
+    long doe = z - era * 146097, yoe = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365;
+    long y = yoe + era * 400, doy = doe - (365 * yoe + yoe / 4 - yoe / 100), mp = (5 * doy + 2) / 153;
+    long d = doy - (153 * mp + 2) / 5 + 1, m = mp < 10 ? mp + 3 : mp - 9;
+    if (m <= 2) y++;
+    snprintf(out, len, "%04ld-%02ld-%02ld %02ld:%02ld", y, m, d, secs / 3600, secs / 60 % 60);
+}
+
+/* -------------------------------------------- the update stick (kernel) */
+
+bool cz_to_stick(const char *self, const char *title) {
+    char stick[ITX_PATH_MAX], dst[ITX_PATH_MAX], old[ITX_PATH_MAX], mark[ITX_PATH_MAX];
+    /* already the update on a stick, started by hand from the terminal */
+    if (!strncmp(self, "/media/", 7) && ends_with(self, "/update.xvr")) {
+        printf("This is the update on a USB stick: unplug the stick, plug it in again and\n"
+               "answer " CZ_YELLOW "yes" CZ_RESET " to " CZ_YELLOW "are you need update ?" CZ_RESET "\n");
+        return true;
+    }
+    if (!cz_find_stick(stick, sizeof stick, NULL)) {
+        printf(CZ_YELLOW "Plug in a USB stick (FAT32) and run this again." CZ_RESET "\n"
+               "The stick only carries this installer for a moment: it is put on the stick as\n"
+               "update.xvr, and the update itelx starts from it may write the kernel.\n");
+        return false;
+    }
+    snprintf(dst, sizeof dst, "%s/update.xvr", stick);
+    snprintf(old, sizeof old, "%s/update.xvr.old", stick);
+    snprintf(mark, sizeof mark, "%s/" CZ_STICK_MARK, stick);
+    uint32_t mine, theirs;
+    uint64_t ms, ts;
+    if (!cz_file_crc(self, &mine, &ms)) {
+        printf(CZ_RED "cannot read this program (%s)" CZ_RESET "\n", self);
+        return false;
+    }
+    bool had_old = false;
+    struct itx_stat st;
+    if (stat(dst, &st) == 0 && !(cz_file_crc(dst, &theirs, &ts) && theirs == mine && ts == ms)) {
+        if (stat(mark, &st) == 0) {
+            remove(dst);                              /* another customizer this tool put there */
+        } else {
+            printf("%s already holds an update.xvr.\n", stick);
+            if (!cz_ask_yes("Put it aside as update.xvr.old for now (it comes back afterwards)?")) return false;
+            remove(old);
+            int r = rename(dst, old);
+            if (r) { printf(CZ_RED "%s: %s" CZ_RESET "\n", dst, strerror(r)); return false; }
+            had_old = true;
+        }
+    }
+    if (stat(mark, &st) == 0) {
+        size_t len;
+        char *m = read_file(mark, &len, 4096);
+        if (m && strstr(m, "previous=update.xvr.old")) had_old = true;
+        free(m);
+    }
+    printf("putting %s on %s as update.xvr ...\n", title, stick);
+    uint32_t c = 0;
+    int r = cz_copy_file(self, dst, &c);
+    if (r || c != mine || !cz_file_crc(dst, &theirs, &ts) || theirs != mine) {
+        printf(CZ_RED "the stick could not be written (%s)" CZ_RESET "\n", r ? strerror(r) : "it does not read back the same");
+        remove(dst);
+        if (had_old) rename(old, dst);
+        return false;
+    }
+    char note[512];
+    snprintf(note, sizeof note,
+             "This stick carries the itelx customizer \"%s\" as update.xvr.\n"
+             "Plugged into itelx 1.4 it asks \"are you need update ?\"; on yes the customizer\n"
+             "installs, and then removes update.xvr and this file from the stick again.\n"
+             "%s", title, had_old ? "previous=update.xvr.old\n" : "");
+    write_file(mark, note, strlen(note), false);
+    sync();
+    int e = eject(stick);
+    printf(CZ_GREEN "ready." CZ_RESET " Now:\n"
+           "  1. %s the stick and plug it in again\n"
+           "  2. itelx asks " CZ_YELLOW "are you need update ?" CZ_RESET ": answer " CZ_YELLOW "yes" CZ_RESET "\n"
+           "  3. %s installs from there, the kernel too\n", e ? "unplug" : "the stick is written out: unplug", title);
+    return true;
+}
+
+void cz_clean_stick(const char *stick) {
+    char mark[ITX_PATH_MAX], dst[ITX_PATH_MAX], old[ITX_PATH_MAX];
+    snprintf(mark, sizeof mark, "%s/" CZ_STICK_MARK, stick);
+    struct itx_stat st;
+    if (stat(mark, &st)) return;                      /* not prepared by a customizer */
+    size_t len;
+    char *m = read_file(mark, &len, 4096);
+    bool had_old = m && strstr(m, "previous=update.xvr.old");
+    free(m);
+    snprintf(dst, sizeof dst, "%s/update.xvr", stick);
+    snprintf(old, sizeof old, "%s/update.xvr.old", stick);
+    remove(dst);
+    if (had_old) rename(old, dst);
+    remove(mark);
+    sync();
+    printf("the stick is as it was (%s)\n", had_old ? "its own update.xvr is back" : "update.xvr removed");
+}
+
+/* -------------------------------------------- what is installed (state) */
+
+static void field(const char *text, const char *key, char *out, size_t len) {
+    out[0] = 0;
+    size_t kl = strlen(key);
+    for (const char *p = text; p && *p;) {
+        if (!strncmp(p, key, kl) && p[kl] == '=') {
+            p += kl + 1;
+            size_t n = 0;
+            while (p[n] && p[n] != '\n') n++;
+            if (n >= len) n = len - 1;
+            memcpy(out, p, n);
+            out[n] = 0;
+            return;
+        }
+        p = strchr(p, '\n');
+        if (p) p++;
+    }
+}
+
+bool cz_state_read(struct cz_state *s) {
+    memset(s, 0, sizeof *s);
+    size_t len;
+    char *t = read_file(CZ_STATE, &len, 1 << 20);
+    if (!t) return false;
+    char k[8];
+    field(t, "id", s->id, sizeof s->id);
+    field(t, "title", s->title, sizeof s->title);
+    field(t, "version", s->version, sizeof s->version);
+    field(t, "installed", s->installed, sizeof s->installed);
+    field(t, "kernel", k, sizeof k);
+    s->kernel = !strcmp(k, "yes");
+    free(t);
+    return s->id[0] != 0;
+}
+
+==> customizers/common/recustomize.c <==
+/* recustomize: puts itelx back as it was right after it was installed.
+ *
+ * Every customizer app installs it as /system/recustomize.xvr, and it is
+ * a file of its own in the release (recustomize.xvr): type recustomize in
+ * a terminal, choose "Restore the system" in Noter, School mode or Work
+ * mode, or copy it to a USB stick as update.xvr.
+ *
+ * Inside it are the files of itelx 1.4 as the ODE installer writes them
+ * (tools/mkfactory.py). It
+ *   1. puts back every system file that is not the original (the terminal,
+ *      init, the XVC interpreter, the programs in /dex, ...)
+ *   2. puts back the original kernel when a customizer replaced it; that
+ *      needs an update the user accepted, so then it goes by a USB stick
+ *      as the customizers do (cz.h)
+ *   3. deletes everything else on the system disk: the customizer's apps
+ *      and every file the user made, before or after the customizer
+ *      (documents, journals, databases, the vault, installed apps)
+ * What the installer wrote for this computer stays: /boot/cmdline (where
+ * the system disk is), /system/hostname and /system/owner. Nothing is done
+ * before the user types YES.
+ */
+#include "cz.h"
+
+static const char *const keep[] = { "/boot/cmdline", "/system/hostname", "/system/owner" };
+
+static char self[ITX_PATH_MAX];
+static char mpoints[16][64];
+static int nmpoints;
+
+struct plist { char **v; int n, cap; uint64_t bytes; };
+
+static void padd(struct plist *l, const char *p, uint64_t size) {
+    if (l->n == l->cap) {
+        l->cap = l->cap ? l->cap * 2 : 256;
+        char **nv = realloc(l->v, sizeof(char *) * l->cap);
+        if (!nv) { printf(CZ_RED "out of memory" CZ_RESET "\n"); exit(1); }
+        l->v = nv;
+    }
+    l->v[l->n++] = strdup(p);
+    l->bytes += size;
+}
+
+static bool is_factory_file(const char *p) {
+    const struct cz_entry *e = cz_find(p);
+    return e && (e->targets & T_ITFS);
+}
+
+static bool is_factory_dir(const char *p) {
+    if (!strcmp(p, "/")) return true;
+    const struct cz_entry *e = cz_entries();
+    size_t l = strlen(p);
+    for (uint32_t i = 0; i < cz_head()->count; i++) {
+        if ((e[i].targets & T_DIR) && !strcmp(e[i].path, p)) return true;
+        if ((e[i].targets & T_ITFS) && !strncmp(e[i].path, p, l) && e[i].path[l] == '/') return true;
+    }
+    return false;
+}
+
+static bool is_kept(const char *p) {
+    for (size_t i = 0; i < sizeof keep / sizeof keep[0]; i++) if (!strcmp(keep[i], p)) return true;
+    return false;
+}
+
+static bool is_mount_point(const char *p) {
+    for (int i = 0; i < nmpoints; i++) if (!strcmp(mpoints[i], p)) return true;
+    return false;
+}
+
+static void read_mounts(void) {
+    char buf[2048];
+    long n = mounts(buf, sizeof buf - 1);
+    if (n <= 0) return;
+    buf[n] = 0;
+    for (char *l = buf; *l && nmpoints < 16;) {
+        char *end = strchr(l, '\n');
+        if (end) *end = 0;
+        char *sp = strchr(l, ' ');
+        if (sp) *sp = 0;
+        if (strcmp(l, "/")) strlcpy(mpoints[nmpoints++], l, sizeof mpoints[0]);
+        if (!end) break;
+        l = end + 1;
+    }
+}
+
+/* what is on the system disk that the original does not have */
+static void scan(const char *dir, struct plist *files, struct plist *dirs) {
+    int fd = open(dir, O_RDONLY);
+    if (fd < 0) return;
+    struct itx_dirent de;
+    struct plist sub = { 0 };
+    while (readdir(fd, &de) == 1) {
+        char p[ITX_PATH_MAX];
+        snprintf(p, sizeof p, "%s/%s", strcmp(dir, "/") ? dir : "", de.name);
+        if (de.type == VT_DIR) {
+            if (!is_mount_point(p)) padd(&sub, p, 0);
+        } else if (!is_factory_file(p) && !is_kept(p)) {
+            padd(files, p, de.size);
+        }
+    }
+    close(fd);
+    for (int i = 0; i < sub.n; i++) {
+        scan(sub.v[i], files, dirs);
+        if (!is_factory_dir(sub.v[i])) padd(dirs, sub.v[i], 0);   /* after what is inside it */
+        free(sub.v[i]);
+    }
+    free(sub.v);
+}
+
+/* the top folder of a path: /home/noter/x -> /home */
+static void top_of(const char *p, char *out, size_t len) {
+    const char *s = strchr(p + 1, '/');
+    size_t n = s ? (size_t)(s - p) : strlen(p);
+    if (n >= len) n = len - 1;
+    memcpy(out, p, n);
+    out[n] = 0;
+    if (!s) strlcpy(out, "/", len);
+}
+
+static void summary(const struct plist *files) {
+    struct { char top[64]; int n; uint64_t bytes; } t[24];
+    int nt = 0;
+    for (int i = 0; i < files->n; i++) {
+        char top[64];
+        top_of(files->v[i], top, sizeof top);
+        struct itx_stat st;
+        uint64_t size = stat(files->v[i], &st) == 0 ? st.size : 0;
+        int k = 0;
+        while (k < nt && strcmp(t[k].top, top)) k++;
+        if (k == nt) {
+            if (nt == 24) continue;
+            strlcpy(t[nt].top, top, sizeof t[nt].top);
+            t[nt].n = 0;
+            t[nt].bytes = 0;
+            nt++;
+        }
+        t[k].n++;
+        t[k].bytes += size;
+    }
+    for (int k = 0; k < nt; k++)
+        printf("    %-20s %5d file(s)  %lu KiB\n", t[k].top, t[k].n, (unsigned long)((t[k].bytes + 1023) / 1024));
+}
+
+static bool boot_differs(const char *boot) {
+    const struct cz_entry *e = cz_entries();
+    for (uint32_t i = 0; i < cz_head()->count; i++) {
+        if (!(e[i].targets & T_BOOT)) continue;
+        char p[ITX_PATH_MAX];
+        uint32_t c;
+        uint64_t sz;
+        cz_join(p, sizeof p, boot, e[i].path);
+        if (!cz_file_crc(p, &c, &sz) || c != e[i].crc || sz != e[i].size) return true;
+    }
+    return false;
+}
+
+int main(int argc, char **argv) {
+    cz_crc_init();
+    bool as_update = argc > 1 && !strcmp(argv[0], "update");
+    const char *stick = as_update ? argv[1] : NULL;
+    if (as_update) snprintf(self, sizeof self, "%s/update.xvr", stick);
+    else if (argv[0][0] == '/') strlcpy(self, argv[0], sizeof self);
+    else {
+        char cwd[ITX_PATH_MAX];
+        getcwd(cwd, sizeof cwd);
+        snprintf(self, sizeof self, "%s/%s", strcmp(cwd, "/") ? cwd : "", argv[0]);
+    }
+    char why[200];
+    printf("\n" CZ_CYAN "recustomize" CZ_RESET " - puts itelx back as it was right after it was installed\n\n");
+    if (!cz_verify(why, sizeof why)) {
+        printf(CZ_RED "recustomize is damaged: %s; nothing was changed" CZ_RESET "\n", why);
+        return 1;
+    }
+    if (!cz_system_ok()) return 1;
+
+    struct cz_state st;
+    if (cz_state_read(&st)) printf("itelx is now: " CZ_YELLOW "%s %s" CZ_RESET " (installed %s)\n", st.title, st.version, st.installed);
+    else printf("itelx is not customized now; the original files are put back all the same.\n");
+
+    char boot[ITX_PATH_MAX];
+    bool have_boot = cz_find_boot(boot, sizeof boot);
+    bool kernel = have_boot && boot_differs(boot);
+    bool writable = have_boot && cz_boot_writable(boot);
+    if (kernel && !writable) {
+        printf("\nThe kernel is not the original one. itelx 1.4 lets only an update you accept\n"
+               "from a USB stick write the kernel, so recustomize goes by a stick.\n\n");
+        if (as_update) {
+            printf(CZ_RED "this update may not write the boot partition; nothing was changed" CZ_RESET "\n");
+            return 1;
+        }
+        return cz_to_stick(self, "recustomize") ? 0 : 1;
+    }
+
+    /* the plan */
+    read_mounts();
+    struct plist files = { 0 }, dirs = { 0 }, restore = { 0 };
+    scan("/", &files, &dirs);
+    const struct cz_head *h = cz_head();
+    const struct cz_entry *e = cz_entries();
+    for (uint32_t i = 0; i < h->count; i++) {
+        if (!(e[i].targets & T_ITFS)) continue;
+        uint32_t c;
+        uint64_t sz;
+        if (!cz_file_crc(e[i].path, &c, &sz) || c != e[i].crc || sz != e[i].size) padd(&restore, e[i].path, e[i].size);
+    }
+    printf("\nWhat it does:\n");
+    printf("  puts back %d system file(s) that are not the original ones\n", restore.n);
+    printf("  the kernel: %s\n", kernel ? "the original one is put back" : "already the original one");
+    if (files.n) {
+        printf("  " CZ_RED "deletes for good" CZ_RESET " %d file(s) and %d folder(s) the original system does not have:\n", files.n, dirs.n);
+        summary(&files);
+    } else {
+        printf("  nothing to delete: there is no file the original system does not have\n");
+    }
+    printf("  stays: /boot/cmdline, /system/hostname, /system/owner (written for this computer)\n\n");
+    if (!restore.n && !kernel && !files.n && !dirs.n) {
+        printf(CZ_GREEN "itelx is already as it was installed." CZ_RESET "\n");
+        if (stick) cz_clean_stick(stick);
+        return 0;
+    }
+    if (!cz_ask_word("Type " CZ_YELLOW "YES" CZ_RESET " to put itelx back as it was installed:", "YES")) {
+        printf("nothing was changed\n");
+        return 0;
+    }
+
+    /* 1. the system files: the terminal comes back first */
+    int bad = 0;
+    for (uint32_t i = 0; i < h->count; i++) {
+        if (e[i].targets & T_DIR) {
+            struct itx_stat s;
+            if (stat(e[i].path, &s)) mkdir(e[i].path);
+            continue;
+        }
+        if (!(e[i].targets & T_ITFS)) continue;
+        int r = cz_install(e[i].path, cz_data(&e[i]), e[i].size, e[i].crc, why, sizeof why);
+        if (r == F_DONE) printf("  put back %s\n", e[i].path);
+        else if (r != F_SAME) { printf(CZ_RED "  %s: %s" CZ_RESET "\n", e[i].path, r == F_ROFS ? "read only" : why); bad++; }
+    }
+    if (bad) {
+        printf(CZ_RED "stopped before anything was deleted; run recustomize again." CZ_RESET "\n");
+        return 1;
+    }
+
+    /* 2. the kernel */
+    if (kernel) {
+        for (uint32_t i = 0; i < h->count; i++) {
+            if (!(e[i].targets & T_BOOT)) continue;
+            char p[ITX_PATH_MAX];
+            cz_join(p, sizeof p, boot, e[i].path);
+            int r = cz_install(p, cz_data(&e[i]), e[i].size, e[i].crc, why, sizeof why);
+            if (r == F_DONE) printf("  put back %s\n", p);
+            else if (r != F_SAME) {
+                printf(CZ_RED "  %s: %s" CZ_RESET "\n", p, r == F_ROFS ? "read only" : why);
+                printf(CZ_RED "the kernel could not be put back; nothing was deleted. Run recustomize again." CZ_RESET "\n");
+                return 1;
+            }
+        }
+    }
+    if (writable) {
+        static const char *const left[] = { "vmlinuz.old", "vmlinuz.new", "initrd.img.old", "initrd.img.new" };
+        for (size_t i = 0; i < sizeof left / sizeof left[0]; i++) {
+            char p[ITX_PATH_MAX];
+            snprintf(p, sizeof p, "%s/boot/%s", boot, left[i]);
+            remove(p);
+        }
+    }
+
+    /* 3. everything else; programs still running (a server in the
+       background, say) are stopped first: they hold files open */
+    int stopped = cz_stop_others();
+    if (stopped) printf("  stopped %d program(s) that were still running\n", stopped);
+    int gone = 0, kept = 0;
+    for (int i = 0; i < files.n; i++) {
+        if (!strcmp(files.v[i], CZ_STATE) || !strcmp(files.v[i], "/system/recustomize.xvr")) continue;   /* last */
+        if (remove(files.v[i]) == 0) gone++;
+        else kept++;
+    }
+    bool busy = false;
+    for (int i = 0; i < dirs.n; i++) {
+        int r = remove(dirs.v[i]);
+        if (r == -EBUSY) busy = true;
+        else if (r) kept++;
+    }
+    if (busy && as_update) {
+        /* a folder is some program's working folder: the terminal's (a
+           customizer's terminal starts in its own folder). As an update this
+           program has the terminal to itself: the terminal starts again (as
+           the original one now, in /) and the folders can go. */
+        cz_restart_terminal();
+        sleep_ms(1000);
+        busy = false;
+    }
+    for (int i = 0; i < dirs.n; i++) {
+        struct itx_stat st;
+        if (stat(dirs.v[i], &st)) continue;
+        int r = remove(dirs.v[i]);
+        if (r == -EBUSY) { busy = true; printf(CZ_YELLOW "  %s is in use (a program works in it)" CZ_RESET "\n", dirs.v[i]); }
+        else if (r) kept++;
+    }
+    if (!busy) {
+        /* last: until here, recustomize can run again */
+        if (remove("/system/recustomize.xvr") == 0) gone++;
+        if (remove(CZ_STATE) == 0) gone++;
+    }
+    sync();
+    if (stick) cz_clean_stick(stick);
+    printf(CZ_GREEN "itelx is as it was installed" CZ_RESET " (%d file(s) put back, %d deleted%s).\n", restore.n, gone,
+           kept || busy ? "; some could not be deleted" : "");
+    if (busy) printf("A folder in use stays: go out of it (cd= /) and run recustomize again to delete it.\n");
+    if (cz_ask_yes("Restart now (needed to start the original terminal and kernel)?")) { sync(); reboot(); }
+    cz_restart_terminal();
+    return 0;
+}

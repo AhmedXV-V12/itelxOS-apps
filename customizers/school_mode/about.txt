@@ -1,0 +1,7 @@
+School mode turns itelx into a student's desk. Instead of the terminal,
+itelx starts School mode: today's classes and what is due, homework with
+due days, priority and progress, the weekly timetable, exams with
+countdowns and topics, a diary page for every school day, grades, and a
+study timer for every subject (its own length, Pomodoro or a stopwatch)
+that counts against the subject's weekly goal, with statistics. Tools:
+calculator, unit converter, multiplication tables, typing practice, quiz.

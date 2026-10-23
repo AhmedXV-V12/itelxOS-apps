@@ -1,0 +1,16 @@
+data_place turns itelx into a data centre: databases of four kinds, with
+their own tools and terminal, on a black screen with white text.
+  sql       SQL databases: SQLite 3.54.1 (transactions, indexes, JSON,
+            full-text search, math, window functions), CSV import/export
+  doc       document databases in the manner of MongoDB (JSON documents,
+            filters with $gt/$in/$or..., updates with $set/$inc/$push...)
+  kv        key-value databases in the manner of Redis (strings, counters,
+            hashes, lists, sets, expiry), served in the Redis protocol
+  vec       vector collections for AI: nearest-neighbour search by cosine,
+            L2 or dot product, metadata filters, text collections
+  dbscan    tells what about 40 kinds of database and AI files are
+  dbstat    every database at a glance
+  dbserve   all of them as an HTTP API with JSON, behind a token
+  dbbackup  /data to a USB stick, every file checked by SHA-256
+It brings an itelx kernel with Ethernet drivers (Intel e1000/e1000e,
+Realtek RTL8139, virtio-net), DHCP, DNS and TCP, and black-and-white text.

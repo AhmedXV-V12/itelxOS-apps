@@ -1,0 +1,3 @@
+Restart, and itelx starts with data_place's terminal on a black screen:
+dbstat shows the databases, help every command. recustomize puts itelx
+back as it was installed (and /data goes too: dbbackup first).

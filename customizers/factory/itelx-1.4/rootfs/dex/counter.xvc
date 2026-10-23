@@ -1,0 +1,10 @@
+# counter.xvc [name] [count] - counts slowly; run it in the background with &
+let name = "counter"
+let count = 5
+if len(args) > 1 { name = args[1] }
+if len(args) > 2 { count = int(args[2]) }
+for i in range(1, count + 1) {
+    print(name + ": " + str(i) + " (pid " + str(pid()) + ")")
+    sleep(400)
+}
+print(name + ": done")

@@ -1,0 +1,123 @@
+diff -ruN a/kernel/console/console.c b/kernel/console/console.c
+--- a/kernel/console/console.c
++++ b/kernel/console/console.c
+@@ -65,7 +65,7 @@
+ static char status_right[32] = "EN  LTR";
+ static bool ttydebug;
+ 
+-static const u32 palette[] = { CON_FG, CON_DIM, CON_WARN, CON_ERR, 0x9EF5B0, 0x8FE3FF };
++static const u32 palette[] = { CON_FG, CON_DIM, CON_WARN, CON_ERR, CON_GREEN, CON_CYAN };
+ #define NPAL (sizeof palette / sizeof palette[0])
+ 
+ /* ------------------------------------------------------------- lines */
+@@ -282,7 +282,7 @@
+ }
+ 
+ static void draw_status(void) {
+-    const u32 sbg = 0x1E56B4;
++    const u32 sbg = CON_STATUS;
+     fb_fill(0, 0, (int)g_fb.width, ch, sbg);
+     const char *left = ITELX_VERSION;
+     int x = cw;
+diff -ruN a/kernel/include/console.h b/kernel/include/console.h
+--- a/kernel/include/console.h
++++ b/kernel/include/console.h
+@@ -5,11 +5,27 @@
+ #define ITX_CONSOLE_H
+ #include "types.h"
+ 
++#include "edition.h"
++#ifdef ITX_THEME_MONO
++/* data_place: black ground, white text */
++#define CON_BG      0x000000
++#define CON_FG      0xFFFFFF
++#define CON_DIM     0xB4B4B4
++#define CON_WARN    0xFFFFFF
++#define CON_ERR     0xFFFFFF
++#define CON_GREEN   0xFFFFFF
++#define CON_CYAN    0xFFFFFF
++#define CON_STATUS  0x1C1C1C
++#else
+ #define CON_BG      0x0B3A8C      /* itelx blue */
+ #define CON_FG      0xFFFFFF      /* white */
+ #define CON_DIM     0xB8CCEE
+ #define CON_WARN    0xFFE27A
+ #define CON_ERR     0xFFB0B0
++#define CON_GREEN   0x9EF5B0
++#define CON_CYAN    0x8FE3FF
++#define CON_STATUS  0x1E56B4
++#endif
+ 
+ enum con_dir { DIR_AUTO = 0, DIR_LTR = 1, DIR_RTL = 2 };
+ 
+diff -ruN a/kernel/include/version.h b/kernel/include/version.h
+--- a/kernel/include/version.h
++++ b/kernel/include/version.h
+@@ -3,7 +3,8 @@
+ #ifndef ITX_VERSION_H
+ #define ITX_VERSION_H
+ 
+-#define ITELX_VERSION      "itelx 1.4"
++#include "edition.h"
++#define ITELX_VERSION      "itelx 1.4" ITELX_EDITION
+ #define ITELX_VERSION_NUM  0x0104
+ #define ITELX_BUILD_DATE   "2026-10-22"
+ 
+diff -ruN a/kernel/main.c b/kernel/main.c
+--- a/kernel/main.c
++++ b/kernel/main.c
+@@ -31,6 +31,7 @@
+ #include "media.h"
+ #include "version.h"
+ #include "smbios.h"
++#include "net.h"
+ 
+ void ata_init(void);
+ void ahci_init(void);
+@@ -127,6 +128,7 @@
+     update_init();
+     media_init();
+     usb_start();
++    net_init();                       /* customizer kernels: the network cards */
+ 
+     if (cmdline_has("itelx.selftest")) selftest_run();
+ 
+diff -ruN a/kernel/proc/proc.c b/kernel/proc/proc.c
+--- a/kernel/proc/proc.c
++++ b/kernel/proc/proc.c
+@@ -5,6 +5,7 @@
+ #include "mm.h"
+ #include "errno.h"
+ #include "proc.h"
++#include "net.h"
+ #include "time.h"
+ #include "vfs.h"
+ #include "xvr.h"
+@@ -389,6 +390,7 @@
+ NORETURN void proc_exit(int code) {
+     struct proc *p = current;
+     if (p == idle) panic("the idle loop tried to exit");
++    net_proc_exit(p->pid);                   /* its sockets close */
+     for (int i = 0; i < MAX_FDS; i++) {
+         if (p->fds[i]) { vfs_close(p->fds[i]); p->fds[i] = NULL; }
+     }
+diff -ruN a/kernel/proc/syscall.c b/kernel/proc/syscall.c
+--- a/kernel/proc/syscall.c
++++ b/kernel/proc/syscall.c
+@@ -24,6 +24,7 @@
+ #include "blk.h"
+ #include "hwinfo.h"
+ #include "version.h"
++#include "net.h"
+ #include "../../abi/itx_abi.h"
+ 
+ #define IOCHUNK 65536
+@@ -458,7 +459,7 @@
+     case SYS_DISKLIST: r = sys_disklist((void *)a, b); break;
+     case SYS_FSINFO: r = sys_fsinfo((const char *)a, (void *)b); break;
+     case SYS_TTY_KEYWAIT: r = sys_tty_keywait((void *)a, b); break;
+-    default: r = -ENOSYS;
++    default: r = n >= SYS_NET_INFO && n <= SYS_SOCK_INFO ? sys_net(n, a, b, c, d) : -ENOSYS;
+     }
+     f->rax = (u64)r;
+ }

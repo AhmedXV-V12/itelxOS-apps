@@ -1,0 +1,8 @@
+# files.xvc - working with ITFS from XVC
+let dir = "/dex/xvc-demo"
+if not exists(dir) { makedir(dir) }
+writefile(dir + "/note.txt", "first line\n")
+appendfile(dir + "/note.txt", "second line\n")
+print(readfile(dir + "/note.txt"))
+print("files in " + dir + ": " + join(listdir(dir), ", "))
+print("size: " + str(filesize(dir + "/note.txt")) + " bytes")

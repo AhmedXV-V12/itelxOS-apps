@@ -1,0 +1,3 @@
+From now on itelx starts Noter instead of the terminal. Esc opens its menu;
+"System" there restarts or powers off the computer, and "Restore the system"
+puts itelx back as it was installed (recustomize).

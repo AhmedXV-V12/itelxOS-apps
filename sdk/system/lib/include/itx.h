@@ -54,6 +54,13 @@ int   tty_key(struct itx_key *k);
 int   devlist(struct itx_devinfo *out, int max);       /* USB devices -> count */
 int   eject(const char *path);                         /* a volume in /media */
 int   xvr_check(const char *path, char *why, size_t len);   /* 0: a valid XVR executable */
+/* itelx 1.4; on an older kernel they return -ENOSYS */
+int   cpustat(struct itx_cpustat *s);
+int   hwinfo(struct itx_hwinfo *h);
+int   pcilist(struct itx_pciinfo *out, int max);       /* -> count */
+int   disklist(struct itx_diskinfo *out, int max);     /* -> count */
+int   fsinfo(const char *path, struct itx_fsinfo *fi);
+int   tty_keywait(struct itx_key *k, long ms);         /* raw mode; -EAGAIN: no key within ms */
 
 #define WAIT_NOHANG 1
 

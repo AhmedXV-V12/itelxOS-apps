@@ -65,6 +65,12 @@ int tty_key(struct itx_key *k) { return (int)S1(SYS_TTY_KEY, k); }
 int devlist(struct itx_devinfo *out, int max) { return (int)S2(SYS_DEVLIST, out, max); }
 int eject(const char *path) { return (int)S1(SYS_EJECT, path); }
 int xvr_check(const char *path, char *why, size_t len) { return (int)S3(SYS_XVRCHECK, path, why, len); }
+int cpustat(struct itx_cpustat *s) { return (int)S1(SYS_CPUSTAT, s); }
+int hwinfo(struct itx_hwinfo *h) { return (int)S1(SYS_HWINFO, h); }
+int pcilist(struct itx_pciinfo *out, int max) { return (int)S2(SYS_PCILIST, out, max); }
+int disklist(struct itx_diskinfo *out, int max) { return (int)S2(SYS_DISKLIST, out, max); }
+int fsinfo(const char *path, struct itx_fsinfo *fi) { return (int)S2(SYS_FSINFO, path, fi); }
+int tty_keywait(struct itx_key *k, long ms) { return (int)S2(SYS_TTY_KEYWAIT, k, ms); }
 
 /* -------------------------------------------------------------- memory */
 

@@ -1,0 +1,36 @@
+The customizer apps: licences
+=============================
+
+Copyright (c) 2026 Ahmed Walid (AXV).
+
+The customizer apps are open source. Each folder keeps the licence of where
+it comes from:
+
+  Mozilla Public License 2.0 (the LICENSE file at the top of this repository)
+    common/, kit/, noter/, school_mode/, work_mode/, file_saver/,
+    data_place/, tools/, customizers.mk, kernel/build-kernel.sh,
+    kernel/src/abi/ (the network system call interface: userspace, as abi/
+    of itelx is), and the programs and installers built from them
+    (release/*.xvr, release/*.txt). Change them and share them; changed
+    files stay under the MPL 2.0 and their source must be available.
+
+  itelx Kernel License 1.0 (kernel/LICENSE)
+    kernel/src/kernel/ (the network stack and the network card drivers),
+    kernel/itelx-1.4-net.patch, and the kernels built with them
+    (kernel/out/, and inside file_saver.xvr and data_place.xvr). These are
+    parts of the itelx kernel, published by its copyright holder. As that
+    licence says, you may use them and share them unchanged, read them and
+    send changes back, but you may not distribute a modified version.
+
+  itelxOS 1.4, as published (factory/itelx-1.4/, and inside recustomize.xvr)
+    the files of a newly installed itelxOS 1.4, unchanged: its kernel under
+    the itelx Kernel License 1.0, its userspace under the MPL 2.0, its fonts
+    and Unicode data under their own licences. The texts are in
+    factory/itelx-1.4/rootfs/system/licenses.
+
+  Public domain
+    third_party/sqlite/ (SQLite 3.54.1, from sqlite.org, unchanged),
+    compiled into sql, doc, dbscan, dbstat and dbserve of data_place.
+
+Programs that run on itelx through its system calls are not derived from
+the kernel: your own programs and customizers may be under any licence.

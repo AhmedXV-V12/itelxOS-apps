@@ -1,0 +1,12 @@
+File saver turns itelx into a safe place for your files. Files of any kind
+(documents, pictures, programs, archives, data) go into /vault, sorted into
+folders by their kind. Every file is indexed with its SHA-256, so "check"
+finds any file that changed or went missing; a replaced file keeps its
+earlier version; deleted files go to a trash first; files can be locked
+with the vault password (ChaCha20 encryption with HMAC-SHA-256); the vault
+backs up to a USB stick, only what changed. The "vault" organizer sorts
+and moves files full screen. Its terminal (instead of itelx's) has every
+itelx command and these. It brings an itelx kernel with Ethernet drivers
+(Intel e1000/e1000e, Realtek RTL8139, virtio-net): DHCP, ping, DNS,
+downloads (fetch), and "share", which shows a folder to the browsers of
+the network, read only.

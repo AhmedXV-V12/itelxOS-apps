@@ -1,0 +1,15 @@
+# School mode: what it installs (tools/mkczpayload.py)
+info:/about.txt=customizers/school_mode/about.txt
+info:/after.txt=customizers/school_mode/after.txt
+dir:/home
+dir:/home/school
+itfs:/system/terminal.xvr={B}/cz/apps/school.xvr
+itfs:/system/recustomize.xvr={B}/cz/recustomize.xvr
+# the tools of its menu (XVC apps of this repository)
+itfs:/dex/calc.xvc=apps/xvc/calc.xvc
+itfs:/dex/convert.xvc=apps/xvc/convert.xvc
+itfs:/dex/table.xvc=apps/xvc/table.xvc
+itfs:/dex/typing.xvc=apps/xvc/typing.xvc
+itfs:/dex/quiz.xvc=apps/xvc/quiz.xvc
+itfs:/dex/primes.xvc=apps/xvc/primes.xvc
+itfs:/dex/base.xvc=apps/xvc/base.xvc

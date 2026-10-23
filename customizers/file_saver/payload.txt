@@ -1,0 +1,14 @@
+# File saver: what it installs (tools/mkczpayload.py)
+info:/about.txt=customizers/file_saver/about.txt
+info:/after.txt=customizers/file_saver/after.txt
+dir:/vault
+itfs:/system/terminal.xvr={B}/cz/apps/fsh.xvr
+itfs:/dex/vault.xvr={B}/cz/apps/vault.xvr
+itfs:/dex/share.xvr={B}/cz/apps/share.xvr
+itfs:/dex/sum.xvr={B}/xvr/sum.xvr
+itfs:/dex/fm.xvr={B}/xvr/fm.xvr
+itfs:/system/recustomize.xvr={B}/cz/recustomize.xvr
+# the kernel with the network (customizers/kernel/build-kernel.sh)
+itfs:/kernel/itelx.elf=customizers/kernel/out/net/itelx.elf
+itfs:/boot/vmlinuz=customizers/kernel/out/net/vmlinuz
+boot:/boot/vmlinuz=customizers/kernel/out/net/vmlinuz

@@ -1,0 +1,4 @@
+Restart, and itelx starts with File saver's terminal: type vault for the
+organizer, password to set the vault password, help for every command.
+recustomize puts itelx back as it was installed (and the vault goes too:
+back it up first).

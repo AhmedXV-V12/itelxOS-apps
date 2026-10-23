@@ -52,7 +52,14 @@
 #define SYS_DEVLIST     38    /* struct itx_devinfo*, max -> count (USB devices) */
 #define SYS_EJECT       39    /* path of a volume in /media: written out and unmounted */
 #define SYS_XVRCHECK    40    /* path, buf, len: 0 when it is a valid XVR executable, else why in buf */
-#define SYS_COUNT       41
+/* itelx 1.4: what the machine is and what it is doing (the sys commands) */
+#define SYS_CPUSTAT     41    /* struct itx_cpustat* */
+#define SYS_HWINFO      42    /* struct itx_hwinfo* */
+#define SYS_PCILIST     43    /* struct itx_pciinfo*, max -> count */
+#define SYS_DISKLIST    44    /* struct itx_diskinfo*, max -> count (disks and their partitions) */
+#define SYS_FSINFO      45    /* path, struct itx_fsinfo*: the filesystem the path is on */
+#define SYS_TTY_KEYWAIT 46    /* struct itx_key*, ms: raw mode; -EAGAIN when no key came in time */
+#define SYS_COUNT       47
 
 /* spawn flags */
 #define SPAWN_FG        1     /* the new process gets Ctrl+C */
@@ -180,6 +187,127 @@ struct itx_sysinfo {
     char cpu[48];
     char version[16];
     char root[48];            /* the device ITFS was mounted from */
+};
+
+/* processor time since start, measured with the time stamp counter at
+ * every switch between processes (itelx 1.4) */
+struct itx_cpustat {
+    uint64_t now_us;          /* since the kernel started */
+    uint64_t idle_us;         /* the processor had nothing to run */
+    uint64_t user_us;         /* programs (user processes, their system calls included) */
+    uint64_t kernel_us;       /* kernel threads (terminal input, USB, updates) */
+    uint64_t interrupts;      /* device and timer interrupts */
+    uint64_t syscalls;
+    uint64_t switches;        /* switches from one process to another */
+    uint64_t fb_bytes;        /* bytes the processor wrote to the screen */
+    uint32_t tsc_mhz;
+    uint32_t nprocs;
+    uint32_t ready;           /* processes waiting for the processor */
+    uint32_t blocked;         /* processes waiting for something else (a key, a disk, time) */
+};
+
+/* the machine (itelx 1.4). Text fields are NUL terminated, empty when the
+ * machine does not say. Serial numbers and UUIDs are not taken over. */
+#define HWF_SMBIOS  1         /* the firmware's SMBIOS tables were found */
+#define HWF_ACPI    2         /* the ACPI tables were found */
+#define HWF_FWINFO  4         /* the UEFI boot path handed over the firmware's own facts */
+
+#define HW_MEMDEV_MAX 8
+
+struct itx_memdev {           /* a memory module (SMBIOS type 17) */
+    uint32_t size_mib;
+    uint16_t speed_mts;       /* rated speed, MT/s (0 unknown) */
+    uint16_t conf_mts;        /* configured speed */
+    char type[12];            /* "DDR4", ... */
+    char form[12];            /* "DIMM", "SODIMM", ... */
+    char locator[24];
+    char maker[24];
+    char part[24];
+};
+
+struct itx_hwinfo {
+    uint32_t size;            /* sizeof(struct itx_hwinfo) */
+    uint32_t flags;           /* HWF_* */
+    /* processor */
+    char cpu_vendor[16];
+    char cpu_brand[48];
+    uint32_t cpu_family, cpu_model, cpu_stepping;
+    uint32_t cpu_count;       /* logical processors in the machine (ACPI), 0 unknown */
+    uint32_t cpu_used;        /* those itelx runs on */
+    uint32_t cpu_cores;       /* cores of one processor package, 0 unknown */
+    uint32_t cpu_threads;     /* threads of one package, 0 unknown */
+    uint32_t cpu_max_mhz;     /* SMBIOS, 0 unknown */
+    uint32_t cpu_cur_mhz;
+    uint32_t tsc_mhz;         /* measured by the kernel at start */
+    uint32_t cache_kib[4];    /* L1 data, L1 instruction, L2, L3, 0 unknown */
+    char cpu_socket[24];
+    char hypervisor[16];      /* the virtual machine's signature; empty on real hardware */
+    char cpu_flags[192];      /* features, separated by spaces */
+    /* memory */
+    uint64_t ram_kib;         /* RAM in the firmware's memory map */
+    uint64_t usable_kib;      /* of it, what the kernel manages */
+    uint64_t firmware_kib;    /* of it, what the firmware keeps (ACPI, runtime, reserved RAM) */
+    uint64_t installed_mib;   /* the memory modules together (SMBIOS), 0 unknown */
+    uint32_t mem_slots;       /* SMBIOS, 0 unknown */
+    uint32_t mem_max_mib;     /* the most memory the board takes, SMBIOS */
+    uint32_t n_memdev;
+    uint32_t pad0;
+    struct itx_memdev memdev[HW_MEMDEV_MAX];
+    /* computer, board and firmware */
+    char sys_maker[40], sys_product[48], sys_version[32], sys_family[32];
+    char board_maker[40], board_product[40], board_version[32];
+    char chassis[20];
+    char bios_vendor[40], bios_version[40], bios_date[16];
+    uint32_t bios_rom_kib;
+    uint16_t bios_major, bios_minor;     /* the firmware's release, SMBIOS 2.4 and later */
+    uint16_t smbios_major, smbios_minor;
+    uint32_t firmware;        /* 1 BIOS, 2 UEFI */
+    uint32_t secure_boot;     /* 0 unknown, 1 off, 2 on, 3 setup mode, 4 not supported */
+    char uefi_vendor[40];
+    uint32_t uefi_fw_rev;     /* the firmware's own revision number */
+    uint32_t uefi_spec_rev;   /* the UEFI version it implements: major << 16 | minor */
+    char acpi_oem[8], acpi_oem_table[12];
+    uint32_t acpi_rev;        /* RSDP revision: 0 ACPI 1.0, 2 ACPI 2.0 or later */
+    char acpi_tables[128];    /* table signatures, separated by spaces */
+    /* screen */
+    uint32_t fb_width, fb_height, fb_bpp, fb_pitch;
+    uint64_t fb_phys, fb_bytes;
+    /* the kernel */
+    char version[16];
+    char build[16];           /* build date, YYYY-MM-DD */
+    uint64_t kernel_kib;      /* the kernel image in memory */
+};
+
+struct itx_pciinfo {
+    uint8_t bus, dev, fn, rev;
+    uint8_t cls, sub, progif, irq;
+    uint16_t vendor, device;
+    uint16_t sub_vendor, sub_device;
+    uint64_t mem_bytes;       /* its largest memory window (BAR) */
+    char kind[24];            /* what the class code says it is */
+    char driver[12];          /* the itelx driver that uses it; empty: none */
+};
+
+struct itx_diskinfo {
+    char name[16];            /* ata0, ahci0, nvme0, usb1; partitions: ata0p1, ... */
+    char model[41];
+    uint8_t removable;
+    uint8_t partno;           /* 0: a whole disk */
+    uint8_t mbr_type;         /* partitions: MBR type (0x7F ITFS, 0xEF EFI), or the closest one for GPT */
+    uint32_t sector_size;
+    uint32_t usb_id;          /* 0: not on USB */
+    uint64_t bytes;
+    char use[48];             /* what it is to itelx: "/ (ITFS)", "/media/STICK", ... */
+};
+
+struct itx_fsinfo {
+    uint64_t total_bytes;
+    uint64_t free_bytes;      /* ~0: not known */
+    uint32_t block_bytes;
+    uint32_t flags;           /* ST_RDONLY */
+    char fsname[16];
+    char source[48];
+    char mount[64];
 };
 
 /* ---- devices (USB) */

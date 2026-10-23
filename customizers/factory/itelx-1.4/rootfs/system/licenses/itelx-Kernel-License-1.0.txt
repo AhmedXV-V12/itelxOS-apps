@@ -1,0 +1,79 @@
+itelx Kernel License, version 1.0
+
+Copyright (c) 2026 Ahmed Walid (AXV). All rights reserved except as granted
+below.
+
+1. What this licence covers
+
+   "The Kernel" means the files of itelxOS in these directories, in source and
+   in compiled form:
+
+     kernel/   the itelx kernel
+     boot/     the boot code (BIOS boot sector and stage 2, the UEFI entry)
+     itfs/     the ITFS filesystem core
+
+   and any compiled file made from them, such as vmlinuz, itelx.elf, mbr.bin
+   and stage2.bin. The rest of itelxOS (the userspace) is under the Mozilla
+   Public License 2.0; third-party files are under their own licences. See
+   LICENSE at the top of itelxOS.
+
+2. What you may do
+
+   a. Use. You may run the Kernel on any number of computers, for any
+      purpose, including commercial purposes, free of charge.
+
+   b. Read and learn. You may read and study the source code of the Kernel.
+
+   c. Share it unchanged. You may copy and distribute the Kernel, in source or
+      compiled form, exactly as published by the copyright holder, on its own
+      or together with other software: for example on an installation medium
+      such as the ODE installer, in a disk image, or with other operating
+      systems. You may charge for the medium or for distribution, but not for
+      the Kernel itself.
+
+   d. Write programs for it. Programs that run on the Kernel and use it only
+      through its system call interface (abi/itx_abi.h) and its executable
+      formats (XVR, XVC) are not covered by this licence and are not
+      derived from the Kernel. You may license such programs however you like.
+
+   e. Send changes back. You may prepare changes to the Kernel only in order
+      to send them to the copyright holder (as a bug report, patch or pull
+      request). The copyright holder may include them under this licence.
+
+3. What you may not do
+
+   a. You may not distribute a modified version of the Kernel, or any work
+      that contains or is derived from a modified version of it, except as
+      allowed in 2(e).
+
+   b. You may not remove or change copyright notices or this licence in the
+      Kernel's files.
+
+   c. You may not use the names "itelx", "itelxOS" or "IFelx" to promote a
+      product derived from the Kernel without written permission.
+
+4. Every copy
+
+   Every copy of the Kernel you distribute, in source or compiled form, must
+   come with this licence text or a clear reference to where it can be read.
+
+5. Third-party parts
+
+   Files of other authors that the Kernel uses or ships with (for example the
+   GNU Unifont glyphs and the Unicode data in third_party/) remain under their
+   own licences, which this licence does not change.
+
+6. Termination
+
+   If you break this licence, your rights under it end automatically. They
+   come back if you stop the breach within 30 days of learning of it, unless
+   the copyright holder has told you in writing that they will not.
+
+7. No warranty
+
+   THE KERNEL IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR
+   IN CONNECTION WITH THE KERNEL OR THE USE OR OTHER DEALINGS IN THE KERNEL.

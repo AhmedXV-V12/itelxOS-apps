@@ -1,0 +1,22 @@
+# data_place: what it installs (tools/mkczpayload.py)
+info:/about.txt=customizers/data_place/about.txt
+info:/after.txt=customizers/data_place/after.txt
+dir:/data
+dir:/data/sql
+dir:/data/doc
+dir:/data/kv
+dir:/data/vec
+itfs:/system/terminal.xvr={B}/cz/apps/dsh.xvr
+itfs:/dex/sql.xvr={B}/cz/apps/sql.xvr
+itfs:/dex/doc.xvr={B}/cz/apps/doc.xvr
+itfs:/dex/kv.xvr={B}/cz/apps/kv.xvr
+itfs:/dex/vec.xvr={B}/cz/apps/vec.xvr
+itfs:/dex/dbscan.xvr={B}/cz/apps/dbscan.xvr
+itfs:/dex/dbstat.xvr={B}/cz/apps/dbstat.xvr
+itfs:/dex/dbserve.xvr={B}/cz/apps/dbserve.xvr
+itfs:/dex/sum.xvr={B}/xvr/sum.xvr
+itfs:/system/recustomize.xvr={B}/cz/recustomize.xvr
+# the kernel with the network, black screen and white text (customizers/kernel/build-kernel.sh)
+itfs:/kernel/itelx.elf=customizers/kernel/out/data/itelx.elf
+itfs:/boot/vmlinuz=customizers/kernel/out/data/vmlinuz
+boot:/boot/vmlinuz=customizers/kernel/out/data/vmlinuz

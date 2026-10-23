@@ -1,0 +1,11 @@
+# Fibonacci numbers, with a function and a loop
+fn fib(n) {
+    if n < 2 { return n }
+    return fib(n - 1) + fib(n - 2)
+}
+let out = []
+for i in range(15) {
+    push(out, fib(i))
+}
+print(join(out, " "))
+print("fib(25) = " + str(fib(25)))

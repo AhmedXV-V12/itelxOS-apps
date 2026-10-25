@@ -39,7 +39,7 @@ XVR_LOAD_MIN = 0x400000
 XVR_LOAD_TOP = 0x0000400000000000
 XVR_KINDS = {0: "program", 1: "update"}
 PAGE = 4096
-SUPPORTED_OS = 0x0103          # itelx 1.3
+SUPPORTED_OS = 0x0200          # itelx 2.0
 
 # struct xvr_header: magic, version, header_size, machine, flags, seg_count,
 # entry, stack_size, heap_max, file_size, header_crc, payload_crc,

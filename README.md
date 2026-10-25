@@ -93,6 +93,18 @@ They are in [`customizers/release`](customizers/release). How to install and
 use them: [docs/en/6-customizers.md](docs/en/6-customizers.md); how they are
 made: [customizers/README.md](customizers/README.md).
 
+## System tools
+
+Two XVR programs in C for **itelxOS 2.0**, in [`system-tools/`](system-tools)
+(not in the USB kit). Both ask y/n first.
+
+| tool | what it does |
+|---|---|
+| `formater` | wipes the system disk, all but `/kernel` and `/boot`; `/media` (USB sticks) and `/ram` are never touched. The next start shows the red recovery screen, where Use backup puts the backup system back |
+| `recovery_tester` | damages `/system/xvinit.xvr` on purpose after keeping its good copy in `/users`, lets the red recovery screen repair the system, then puts the good copy back; when the repair fails it writes the reasons and the logs to `report-ar.txt` and `report-en.txt` |
+
+How to use them: [docs/en/7-system-tools.md](docs/en/7-system-tools.md).
+
 ## Learn
 
 | | English | Arabic |
@@ -103,6 +115,7 @@ made: [customizers/README.md](customizers/README.md).
 | 4 | [XVR apps in C](docs/en/4-xvr-in-c.md) | [Arabic](docs/ar/4-xvr-in-c.md) |
 | 5 | [USB sticks and FAT32](docs/en/5-usb-fat32.md) | [Arabic](docs/ar/5-usb-fat32.md) |
 | 6 | [Customizer apps](docs/en/6-customizers.md) | [Arabic](docs/ar/6-customizers.md) |
+| 7 | [System tools](docs/en/7-system-tools.md) | [Arabic](docs/ar/7-system-tools.md) |
 
 ## XVC to XVR
 
@@ -129,6 +142,7 @@ make              # sdk, apps, the USB kit -> usb/
 make host-xvc     # build/host/xvc: XVC on the PC, to try programs
 make check        # tests of the PC tools
 make customizers  # the customizer apps -> customizers/release
+make system-tools # formater and recovery_tester (itelxOS 2.0) -> system-tools/
 ```
 
 `tests/e2e_itelx.py` starts a real itelxOS 1.3 in QEMU, plugs in a FAT32
@@ -136,7 +150,8 @@ stick made from `usb/`, accepts the update and then runs every app with
 keys typed on the keyboard (43 checks, UEFI and BIOS).
 `tests/e2e_customizers.py` does the same for the customizer apps on
 itelxOS 1.4: install, use, the network with every supported card,
-recustomize.
+recustomize. `tests/e2e_system_tools.py` runs the system tools on
+itelxOS 2.0, through the restart, the red recovery screen and Use backup.
 
 ## Layout
 
@@ -146,8 +161,9 @@ apps/xvr/        the complex apps (C -> XVR); apps/lib: their screen and key hel
 kit/             update.xvr of the USB kit
 sdk/             libitx, the system call interface, the XVR format, xvrlink, the XVC
                  interpreter, and xvcapp (the runtime of XVRs made from XVC)
-tools/           xvc2xvr.py, xvrinfo.py, host-xvc (XVC on a PC)
+tools/           xvc2xvr.py, xvrinfo.py, xvrminos.py, host-xvc (XVC on a PC)
 customizers/     the customizer apps: their programs, installer, kernel parts, release/
+system-tools/    formater and recovery_tester for itelxOS 2.0, built (sources in apps/xvr)
 usb/             ready for a FAT32 stick
 docs/ar, docs/en the guide (Arabic, English)
 screenshots/     the apps on itelxOS 1.3, the customizer apps on 1.4

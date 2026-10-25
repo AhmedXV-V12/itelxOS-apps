@@ -19,6 +19,13 @@ works: [docs/en/4-xvr-in-c.md](../../docs/en/4-xvr-in-c.md)
 `xvc2xvr` is built from [`sdk/xvcapp`](../../sdk/xvcapp) (the XVC interpreter
 with room for a program).
 
+Two folders here are the system tools for itelxOS 2.0, built by
+`make system-tools` into [`system-tools/`](../../system-tools) and not into
+the USB kit: [formater](formater/formater.c) (`formater`) and
+[recovery_tester](recovery_tester/recovery_tester.c) (`recovery_tester`,
+`recovery_tester cancel`). How they work:
+[docs/en/7-system-tools.md](../../docs/en/7-system-tools.md).
+
 What the apps keep: `2048` its best score, `sokoban` the solved levels, both
 in `/dex/data`. In raw-key apps the terminal passes Ctrl+C on as a key; they
 stop on it like any other program.

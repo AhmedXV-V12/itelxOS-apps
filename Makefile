@@ -10,6 +10,8 @@
 #   make check       tests of the PC tools (xvc2xvr.py, xvrinfo.py)
 #   make customizers the customizer apps for itelxOS 1.4 -> customizers/release
 #                    (customizers/customizers.mk, customizers/README.md)
+#   make system-tools formater and recovery_tester for itelxOS 2.0 ->
+#                    system-tools/ (not in the USB kit: they need itelx 2.0)
 #   make clean
 #
 # make cannot work in a path with spaces: clone the repository into a
@@ -54,7 +56,10 @@ $(B)/xvr/xvc2xvr.xvr: $(B)/xvr/xvc2xvr.elf $(XVRLINK)
 	$(XVRLINK) --name xvc2xvr $< $@ >/dev/null
 
 # ------------------------------------- the apps in C: apps/xvr/NAME/*.c
-XVR_APPS := $(sort $(notdir $(patsubst %/,%,$(dir $(wildcard apps/xvr/*/*.c)))))
+ALL_XVR  := $(sort $(notdir $(patsubst %/,%,$(dir $(wildcard apps/xvr/*/*.c)))))
+# the system tools of itelxOS 2.0 stay out of the USB kit (system-tools/)
+SYS_TOOLS := formater recovery_tester
+XVR_APPS := $(filter-out $(SYS_TOOLS),$(ALL_XVR))
 APPLIB   := $(patsubst %.c,$(B)/%.o,$(wildcard apps/lib/*.c))
 
 define app_rule
@@ -64,7 +69,13 @@ $(B)/xvr/$(1).elf: $(patsubst %.c,$(B)/%.o,$(wildcard apps/xvr/$(1)/*.c)) $(APPL
 $(B)/xvr/$(1).xvr: $(B)/xvr/$(1).elf $(XVRLINK)
 	$(XVRLINK) --name $(1) $$< $$@ >/dev/null
 endef
-$(foreach a,$(XVR_APPS),$(eval $(call app_rule,$(a))))
+$(foreach a,$(ALL_XVR),$(eval $(call app_rule,$(a))))
+
+# ---------------------------------- system-tools/: needs itelx 2.0 (min_os)
+system-tools: $(foreach t,$(SYS_TOOLS),$(B)/xvr/$(t).xvr) tools/xvrminos.py
+	@mkdir -p system-tools
+	for t in $(SYS_TOOLS); do cp $(B)/xvr/$$t.xvr system-tools/ && $(PY) tools/xvrminos.py system-tools/$$t.xvr 2.0; done
+	cd system-tools && sha256sum $(foreach t,$(SYS_TOOLS),$(t).xvr) > SHA256SUMS
 
 # --------------------------------------------- the USB kit's installer
 $(B)/kit/update.elf: $(B)/kit/update.o $(LIBITX) sdk/system/lib/xvr.ld
@@ -100,5 +111,5 @@ clean:
 # ------------------------------------------------- the customizer apps
 include customizers/customizers.mk
 
-.PHONY: all usb host-xvc check clean
+.PHONY: all usb host-xvc check clean system-tools
 -include $(shell find $(B) -name '*.d' 2>/dev/null)

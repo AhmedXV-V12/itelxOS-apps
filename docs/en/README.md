@@ -21,8 +21,10 @@ These pages take you from nothing to your own app running on itelx:
 4. [XVR apps in C](4-xvr-in-c.md): complex apps with the SDK of this repository
 5. [Getting programs onto itelx with a USB stick](5-usb-fat32.md): FAT32, the update offer, install
 6. [Customizer apps](6-customizers.md): one file that turns itelx into a journal, a school or work desk, a file vault or a data centre, and back
+7. [System tools](7-system-tools.md): formater wipes the system disk but the kernel and boot files; recovery_tester tests the red recovery screen of itelxOS 2.0
 
 Everything here was checked on a real itelx in QEMU: the apps of this
-repository on itelxOS 1.3 by `tests/e2e_itelx.py`, and the customizer apps
-on itelxOS 1.4 by `tests/e2e_customizers.py`. Both tests start the apps,
-type into them and check what comes out.
+repository on itelxOS 1.3 by `tests/e2e_itelx.py`, the customizer apps on
+itelxOS 1.4 by `tests/e2e_customizers.py`, and the system tools on
+itelxOS 2.0 by `tests/e2e_system_tools.py`. The tests start the apps, type
+into them and check what comes out.

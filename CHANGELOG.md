@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.2 (2026-10-25)
+
+System tools, for itelxOS 2.0 (`system-tools/`, sources in `apps/xvr`).
+They are not in the USB kit, which is unchanged.
+
+- formater: wipes the system disk, all but `/kernel` and `/boot`; `/media`,
+  `/ram` and any other mounted disk are never touched. It lists what goes,
+  says whether the backup system is on the boot partition, and asks y/n.
+  The next start shows the red recovery screen.
+- recovery_tester: keeps the good copy of `/system/xvinit.xvr` in
+  `/users/recovery_tester`, damages the file on purpose, and after the red
+  recovery screen repaired the system it puts the good copy back over the
+  repaired file. When the repair failed it writes the reasons and the logs
+  (the test's state, the boot status, the kernel log) to `report-ar.txt`
+  and `report-en.txt`. `recovery_tester cancel` undoes the test, also in
+  the recovery screen's temporary terminal.
+- Both XVRs need itelx 2.0 (min_os), so the kernel of itelx 1.x refuses
+  them. `tools/xvrminos.py` sets min_os; `make system-tools` builds them.
+- `tools/xvc2xvr.py` and `tools/xvrinfo.py` accept XVRs made for itelx 2.0.
+- `tests/e2e_system_tools.py` runs both on itelxOS 2.0 in QEMU (UEFI and
+  BIOS), through the restart, the red recovery screen and Use backup.
+- The guide's chapter 7, in Arabic and English.
+
 ## 1.1 (2026-10-23)
 
 Customizer apps, for itelxOS 1.4 (`customizers/`, `customizers/release`).

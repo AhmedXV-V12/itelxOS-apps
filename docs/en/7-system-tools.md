@@ -35,8 +35,8 @@ instead of the system. It has two choices:
   `/kernel`, `/system` and `/boot` become those of the backup system. The
   full itelxOS comes back with `update.xvr`.
 - **Use manual**: a small recovery system in memory, on the red screen;
-  `disk.open` opens the broken system at `/media/broken-os` (at `/old` on
-  itelx 2.0 as released), and `see-log` shows where the start stopped.
+  `disk.open` opens the broken system at `/media/broken-os` (itelx 2.1; at
+  `/old` on itelx 2.0), and `see-log` shows where the start stopped.
 
 `/users` is the folder that "Use backup" keeps where it is. That is why
 recovery_tester keeps its files there.

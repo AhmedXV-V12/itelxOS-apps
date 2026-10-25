@@ -40,8 +40,8 @@ itelx:/> /media/STICK/recovery_tester.xvr
   `/kernel` و`/system` و`/boot` هي التي في نظام النسخة الاحتياطية. ويعود
   itelxOS الكامل بـ `update.xvr`.
 - **Use manual**: نظام استرداد صغير في الذاكرة على الشاشة الحمراء؛ يفتح
-  `disk.open` النظام المعطوب في `/media/broken-os` (وفي `/old` على itelx 2.0
-  كما صدر)، ويعرض `see-log` أين توقف التشغيل.
+  `disk.open` النظام المعطوب في `/media/broken-os` (في itelx 2.1؛ وفي `/old`
+  على itelx 2.0)، ويعرض `see-log` أين توقف التشغيل.
 
 </div>
 

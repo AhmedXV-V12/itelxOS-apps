@@ -3,8 +3,8 @@
 ## 1.2.1 (2026-10-25)
 
 - recovery_tester: in the recovery system of "Use manual" it finds the
-  system disk at `/media/broken-os` (where `disk.open` opens it from the
-  next itelx on), else at `/old` (itelx 2.0 as released).
+  system disk at `/media/broken-os` (where `disk.open` opens it from
+  itelx 2.1 on), else at `/old` (itelx 2.0).
 - `tests/e2e_system_tools.py`: the repair by hand (Use manual, disk.open,
   `recovery_tester cancel`, then the full itelxOS starts again).
 - The guide's chapter 7 says so, in Arabic and English.

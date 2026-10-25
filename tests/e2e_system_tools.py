@@ -323,7 +323,45 @@ def t_formater(image, fw, stick):
     s.stop()
 
 
-TESTS = {"recovery_tester": t_recovery_tester, "formater": t_formater}
+def t_recovery_tester_manual(image, fw, stick):
+    """the repair by hand: Use manual, disk.open (/media/broken-os), cancel"""
+    s = Session(image, fw, "rtm", stick)
+    s.start()
+    s.booted()
+    s.plug()
+    s.ask("/media/ST/recovery_tester.xvr")
+    s.answer("y", r"Restart now\? \(y/n\) ")
+    s.type("y\n")
+    s.exited(60)
+    cannot_run(s, "manual: damaged xvinit")
+    s.start()
+    s.red_screen(r"service manager", "rtm-red")
+    s.vm.key("right")
+    time.sleep(0.3)
+    s.vm.key("ret")
+    s.wait(PROMPT, 120)
+    s.plug()
+    out = s.run("/media/ST/recovery_tester.xvr")
+    expect("%s: Use manual before disk.open: recovery_tester asks for it" % fw, out, r"Open the system disk\s+first \(disk\.open\)")
+    s.run("disk.open")
+    out = s.run("/media/ST/recovery_tester.xvr")
+    expect("%s: Use manual: recovery_tester finds the test on /media/broken-os" % fw, out,
+           r"the recovery screen's temporary terminal", r"/system/xvinit\.xvr is payload checksum mismatch")
+    out = s.run("/media/ST/recovery_tester.xvr cancel")
+    expect("%s: Use manual: recovery_tester cancel puts the good copy back by hand" % fw, out,
+           r"the test is undone: the good copy is back in /media/broken-os/system/xvinit\.xvr")
+    s.run("disk.close")
+    s.type("restart\n")
+    s.exited(60)
+    s.start()
+    s.booted()
+    out = s.run("ls /system") + s.run("ls /users")
+    expect("%s: after the repair by hand: the full itelxOS starts again, nothing left" % fw, out,
+           r"top\.xvr", r"web\.xvr", r"\(empty\)", absent=[r"recovery_tester", r"recovered-"])
+    s.stop()
+
+
+TESTS = {"recovery_tester": t_recovery_tester, "recovery_tester_manual": t_recovery_tester_manual, "formater": t_formater}
 
 
 def main():

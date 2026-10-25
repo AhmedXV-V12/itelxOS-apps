@@ -39,8 +39,9 @@ itelx:/> /media/STICK/recovery_tester.xvr
   النسخة الاحتياطية (itelx صغير محفوظ على قسم الإقلاع) على القرص: تصبح
   `/kernel` و`/system` و`/boot` هي التي في نظام النسخة الاحتياطية. ويعود
   itelxOS الكامل بـ `update.xvr`.
-- **Use manual**: طرفية مؤقتة في الذاكرة على الشاشة الحمراء؛ ويُفتح قرص
-  النظام في `/old` بالأمر `disk.open`.
+- **Use manual**: نظام استرداد صغير في الذاكرة على الشاشة الحمراء؛ يفتح
+  `disk.open` النظام المعطوب في `/media/broken-os` (وفي `/old` على itelx 2.0
+  كما صدر)، ويعرض `see-log` أين توقف التشغيل.
 
 </div>
 
@@ -132,9 +133,10 @@ Start the test? (y/n)
 
 في التشغيل التالي يقول itelx إن مدير الخدمات `/system/xvinit.xvr` لم يبدأ
 (`itelx cannot run`) ويعيد التشغيل، فتظهر شاشة الاسترداد الحمراء. أصلح
-النظام منها: **Use backup**، أو **Use manual** والإصلاح باليد. في الطرفية
-المؤقتة لـ Use manual افتح قرص النظام بـ `disk.open`، وعندها يعمل
-`recovery_tester cancel` هناك أيضًا على الملفات التي في `/old`.
+النظام منها: **Use backup**، أو **Use manual** والإصلاح باليد. في طرفية
+Use manual افتح قرص النظام بـ `disk.open`، وعندها يعمل
+`/media/STICK/recovery_tester.xvr cancel` هناك أيضًا على الملفات التي في
+`/media/broken-os` (أو `/old`)، ويكون التشغيل التالي itelxOS الكامل من جديد.
 
 ### 3. الفحص
 
@@ -173,7 +175,8 @@ Start the test? (y/n)
 بنوعي الإقلاع UEFI و BIOS: من فلاشة FAT32، مع كتابة y و n على لوحة المفاتيح،
 مرورًا بإعادة التشغيل، وشاشة الاسترداد الحمراء (يُفحص لونها على الشاشة)،
 وUse backup، والفحص بعده: PASSED، وFAILED مع التقريرين عندما حُذفت النسخة
-السليمة أثناء الاختبار.
+السليمة أثناء الاختبار. ويختبر أيضًا الإصلاح باليد: Use manual ثم `disk.open`
+ثم `recovery_tester cancel` من الفلاشة، فيكون التشغيل التالي itelxOS الكامل.
 
 ```
 python3 tests/e2e_system_tools.py --image /path/to/itelxOS.img --fw uefi,bios

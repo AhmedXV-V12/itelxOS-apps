@@ -50,7 +50,7 @@ struct itx_bootstat {
 #define STATE    "state.txt"
 #define DAMAGE   64
 
-static char root[8];          /* "" or "/old": the system disk in a recovery start */
+static char root[24];         /* "", "/media/broken-os" or "/old": the system disk in a recovery start */
 
 static void path(char *out, size_t len, const char *name) {
     if (name[0] == '/') snprintf(out, len, "%s%s", root, name);
@@ -518,13 +518,16 @@ int main(int argc, char **argv) {
         return argc == 2 && (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help")) ? 0 : 2;
     }
     if (recovery_start()) {
+        /* disk.open puts the system disk at /media/broken-os in the
+           recovery system of Use manual (itelx 2.1), at /old before */
         struct itx_stat st;
-        if (stat("/old" DIR "/" STATE, &st)) {
-            printf(YELLOW "recovery_tester: this is the recovery screen's temporary terminal. Open the system\n"
-                   "disk first (disk.open), then run recovery_tester again." RESET "\n");
+        if (stat("/media/broken-os" DIR "/" STATE, &st) == 0) strlcpy(root, "/media/broken-os", sizeof root);
+        else if (stat("/old" DIR "/" STATE, &st) == 0) strlcpy(root, "/old", sizeof root);
+        else {
+            printf(YELLOW "recovery_tester: this is the recovery screen's terminal. Open the system disk\n"
+                   "first (disk.open), then run recovery_tester again." RESET "\n");
             return 1;
         }
-        strlcpy(root, "/old", sizeof root);
     }
     if (want_cancel) return cancel();
     struct state s;

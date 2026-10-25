@@ -34,8 +34,9 @@ instead of the system. It has two choices:
   the backup system (a small itelx kept on the boot partition) on the disk:
   `/kernel`, `/system` and `/boot` become those of the backup system. The
   full itelxOS comes back with `update.xvr`.
-- **Use manual**: a temporary terminal in memory, on the red screen; the
-  system disk opens at `/old` with `disk.open`.
+- **Use manual**: a small recovery system in memory, on the red screen;
+  `disk.open` opens the broken system at `/media/broken-os` (at `/old` on
+  itelx 2.0 as released), and `see-log` shows where the start stopped.
 
 `/users` is the folder that "Use backup" keeps where it is. That is why
 recovery_tester keeps its files there.
@@ -120,9 +121,10 @@ valid. Then:
 At the next start itelx says `itelx cannot run: the service manager
 (/system/xvinit.xvr) could not be started` and restarts, and the red
 recovery screen comes up. Repair the system there: **Use backup**, or
-**Use manual** and fix it by hand. In the temporary terminal of Use manual,
-open the system disk with `disk.open`; then `recovery_tester cancel` works
-there too, on the files in `/old`.
+**Use manual** and fix it by hand. In the terminal of Use manual, open the
+system disk with `disk.open`; then `/media/STICK/recovery_tester.xvr cancel`
+works there too, on the files in `/media/broken-os` (or `/old`), and the
+next start is the full itelxOS again.
 
 ### 3. The check
 
@@ -159,7 +161,9 @@ repaired file.
 and BIOS: from a FAT32 stick, with y and n typed on the keyboard, through
 the restart, the red recovery screen (checked on the screen), Use backup,
 and the check after it: PASSED, and FAILED with both reports when the good
-copy was deleted during the test.
+copy was deleted during the test. It also repairs by hand: Use manual,
+`disk.open`, `recovery_tester cancel` from the stick, and the next start is
+the full itelxOS again.
 
 ```
 python3 tests/e2e_system_tools.py --image /path/to/itelxOS.img --fw uefi,bios
